@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 // react navigation
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationContainer} from '@react-navigation/native';
-import {AuthStack} from './navigator.auth';
+import AuthStack from './navigator.auth';
 import AppStack from './navigator.app';
 
 // navigation imports
@@ -16,7 +16,7 @@ import AppStack from './navigator.app';
 // import CustomSplash from './CustomSplash';
 
 function RootNav() {
-  const isAuthenticated = true;
+  const isAuthenticated = false;
   //   const user = useUserSelector();
   //   const [isSplashVisible, setIsSplashVisible] = useState(true);
   return <>{isAuthenticated ? <AppStack /> : <AuthStack />}</>;

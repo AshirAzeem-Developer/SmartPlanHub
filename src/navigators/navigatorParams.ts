@@ -1,9 +1,7 @@
 export type AuthStackParamList = {
-  Home: undefined;
+  Login: undefined;
 };
 
 export type AppStackParamsList = {
-  Home: undefined;
-  Profile: undefined;
-  Settings: undefined;
+  HomeTabs: undefined;
 };

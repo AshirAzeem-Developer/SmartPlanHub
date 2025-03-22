@@ -2,8 +2,9 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import CreateBottomTabs from './CreateBottomTabs';
 import Home from '../screens/App/Home';
 import icons from '../assets/icons';
+import {AppStackParamsList} from './navigatorParams';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<AppStackParamsList>();
 
 // function ProfileStack() {
 //   return (

@@ -2,6 +2,7 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {AuthStackParamList} from './navigatorParams';
 import Home from '../screens/App/Home';
+import Login from '../screens/Auth/Login';
 
 //Screens
 
@@ -9,14 +10,15 @@ import Home from '../screens/App/Home';
 
 const Stack = createNativeStackNavigator<AuthStackParamList>();
 
-export const AuthStack = () => {
+function AuthStack() {
   return (
     <Stack.Navigator
-      initialRouteName="Home"
+      initialRouteName="Login"
       screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="Login" component={Login} />
     </Stack.Navigator>
   );
-};
+}
+export default AuthStack;

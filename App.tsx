@@ -1,6 +1,5 @@
 import {NavigationContainer} from '@react-navigation/native';
 import React, {useState} from 'react';
-import {RootNavigator} from './src/navigators/stack.navigator';
 
 //store
 import {Provider} from 'react-redux';
