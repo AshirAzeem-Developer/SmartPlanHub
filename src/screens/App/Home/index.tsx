@@ -3,7 +3,7 @@ import {Text} from 'react-native';
 import StatusBarComponent from '../../../components/global/StatusBarComponent';
 import useStyles from './style';
 
-const Index = ({}) => {
+const Home = ({}) => {
   const {styles, colors} = useStyles();
 
   return (
@@ -14,4 +14,4 @@ const Index = ({}) => {
   );
 };
 
-export default Index;
+export default Home;

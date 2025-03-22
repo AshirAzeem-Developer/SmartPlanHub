@@ -1,12 +1,15 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {AuthStackParamList} from './navigatorParams';
+import Home from '../screens/App/Home';
 
 //Screens
-import Home from '../screens/App/Home/index.tsx';
 
-const Stack = createNativeStackNavigator();
+//bottom tab
 
-export const RootNavigator = ({}) => {
+const Stack = createNativeStackNavigator<AuthStackParamList>();
+
+export const AuthStack = () => {
   return (
     <Stack.Navigator
       initialRouteName="Home"
