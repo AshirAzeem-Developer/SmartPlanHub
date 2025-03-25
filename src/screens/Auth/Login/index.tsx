@@ -5,8 +5,14 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import InputComponent from '../../../components/global/InputComponent';
 import {validateEmail} from '../../../utils/validator';
 
-const Login = () => {
-  const {styles, colors} = useStyles();
+import {NavigationProp} from '@react-navigation/native';
+
+interface LoginProps {
+  navigation: NavigationProp<any>;
+}
+
+const Login: React.FC<LoginProps> = ({navigation}) => {
+  const {styles, sizes, colors} = useStyles();
 
   const [selectedRole, setSelectedRole] = useState<'User' | 'Vendor'>('User');
   const [email, setEmail] = useState('');
@@ -30,6 +36,7 @@ const Login = () => {
         role: selectedRole,
         termsAccepted: isChecked,
       });
+      navigation.navigate('HomeScreen');
     } else {
       console.log('Validation Failed. Please check your inputs.');
     }
@@ -143,8 +150,23 @@ const Login = () => {
         disabled={!isChecked || !!emailError || passwordError}
         style={[styles.createAccountButton, !isChecked && {opacity: 0.5}]}
         onPress={validateInputs}>
-        <Text style={styles.buttonText}>Create Account</Text>
+        <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
+      <View style={styles.createAccountContainer}>
+        <Text
+          style={{
+            fontSize: sizes.WIDTH * 0.035,
+          }}>
+          Don't Have an Account ?
+        </Text>
+        <TouchableOpacity
+          style={styles.signupButton}
+          onPress={() => {
+            navigation.navigate('Signup');
+          }}>
+          <Text style={styles.createAccountText}>Signup </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

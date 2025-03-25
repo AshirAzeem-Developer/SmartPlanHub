@@ -3,6 +3,8 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {AuthStackParamList} from './navigatorParams';
 import Home from '../screens/App/Home';
 import Login from '../screens/Auth/Login';
+import Signup from '../screens/Auth/Signup';
+import HomeScreen from '../screens/App/HomeScreen';
 
 //Screens
 
@@ -18,6 +20,8 @@ function AuthStack() {
         headerShown: false,
       }}>
       <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Signup" component={Signup} />
+      <Stack.Screen name="HomeScreen" component={HomeScreen} />
     </Stack.Navigator>
   );
 }

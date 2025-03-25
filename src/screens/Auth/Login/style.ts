@@ -14,7 +14,7 @@ const useStyles = () => {
       justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: colors.BACKGROUND,
-      paddingHorizontal: sizes.WIDTH * 0.1,
+      paddingHorizontal: sizes.WIDTH * 0.04,
     },
     title: {
       fontSize: sizes.WIDTH * 0.06, // Responsive font size
@@ -102,6 +102,25 @@ const useStyles = () => {
       color: colors.PRIMARY_TEXT,
       fontSize: sizes.WIDTH * 0.04,
       fontWeight: 'bold',
+    },
+    signupButton: {
+      paddingVertical: sizes.HEIGHT * 0.02,
+      borderRadius: sizes.WIDTH * 0.02,
+      alignItems: 'center',
+      marginTop: sizes.HEIGHT * 0.02,
+      marginBottom: sizes.HEIGHT * 0.02,
+    },
+    createAccountText: {
+      ...globalStyles.TEXT_STYLE_BOLD,
+      color: colors.TEXT,
+      fontSize: sizes.WIDTH * 0.035,
+      marginLeft: sizes.WIDTH * 0.02,
+      fontWeight: 'bold',
+    },
+    createAccountContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
     },
   });
 

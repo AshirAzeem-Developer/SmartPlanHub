@@ -31,6 +31,7 @@ type Props = {
   multiline?: boolean;
   editable?: boolean;
   showBottomBorder?: boolean;
+  maxLength?: number;
 };
 
 const InputComponent = ({
@@ -50,6 +51,7 @@ const InputComponent = ({
   multiline,
   editable,
   showBottomBorder = true,
+  maxLength,
   ...props
 }: Props) => {
   const {colors, styles} = useStyles();
@@ -57,12 +59,17 @@ const InputComponent = ({
   const [showError, setShowError] = useState(false);
 
   const handleTextChange = (text: string) => {
-    setShowError(true);
-    if (errorHandler) {
-      const errors = errorHandler
-        .filter(item => !item.validator(text))
-        .map(item => item.errorText);
-      setError(errors.length > 0 ? errors[errors.length - 1] : '');
+    if (text === '') {
+      setShowError(false);
+      setError('');
+    } else {
+      setShowError(true);
+      if (errorHandler) {
+        const errors = errorHandler
+          .filter(item => !item.validator(text))
+          .map(item => item.errorText);
+        setError(errors.length > 0 ? errors[errors.length - 1] : '');
+      }
     }
     onChangeText(text);
   };
@@ -98,6 +105,7 @@ const InputComponent = ({
           placeholder={placeholder}
           placeholderTextColor={placeholderTextColor || colors.GRAY}
           keyboardType={keyboardType}
+          maxLength={maxLength}
         />
 
         {/* Right Icon */}
