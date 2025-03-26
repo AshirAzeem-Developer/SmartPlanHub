@@ -5,6 +5,7 @@ import Home from '../screens/App/Home';
 import Login from '../screens/Auth/Login';
 import Signup from '../screens/Auth/Signup';
 import HomeScreen from '../screens/App/HomeScreen';
+import VendorProfileScreen from '../screens/App/VendorProfile';
 
 //Screens
 
@@ -22,6 +23,7 @@ function AuthStack() {
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Signup" component={Signup} />
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen name="VendorProfile" component={VendorProfileScreen} />
     </Stack.Navigator>
   );
 }

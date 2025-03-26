@@ -3,6 +3,7 @@ export type AuthStackParamList = {
   Signup: undefined;
   ForgotPassword: undefined;
   HomeScreen: undefined;
+  VendorProfile: undefined;
 };
 
 export type AppStackParamsList = {

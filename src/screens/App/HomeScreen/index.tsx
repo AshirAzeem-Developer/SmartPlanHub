@@ -7,6 +7,7 @@ import BookingCard from '../../../components/BookingCard';
 import images from '../../../assets/images';
 import {screen} from '../../../utils/constants';
 import useStyles from './style';
+import {NavigationProp} from '@react-navigation/native';
 
 const vendors = [
   {
@@ -14,24 +15,28 @@ const vendors = [
     image: images.DUMMY_VENDOR,
     name: 'John’s Home Renovations',
     rating: 4.8,
+    onPress: () => {},
   },
   {
     id: '2',
     image: images.DUMMY_VENDOR,
     name: 'Evergreen Landscaping',
     rating: 4.5,
+    onPress: () => {},
   },
   {
     id: '3',
     image: images.DUMMY_VENDOR,
     name: 'TechFix IT Solutions',
     rating: 4.7,
+    onPress: () => {},
   },
   {
     id: '4',
     image: images.DUMMY_VENDOR,
     name: 'Starlight Event Planners',
     rating: 4.3,
+    onPress: () => {},
   },
 ];
 
@@ -52,7 +57,11 @@ const bookings = [
   },
 ];
 
-const HomeScreen = () => {
+interface HomeScreenProps {
+  navigation: NavigationProp<any>;
+}
+
+const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
   const {styles} = useStyles();
   return (
     <ScrollView style={styles.container}>
@@ -66,6 +75,9 @@ const HomeScreen = () => {
         data={vendors}
         renderItem={({item}) => (
           <VendorCard
+            onPress={() => {
+              navigation.navigate('VendorProfile');
+            }}
             image={item.image}
             name={item.name}
             rating={item.rating}
