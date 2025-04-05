@@ -6,6 +6,8 @@ import InputComponent from '../../../components/global/InputComponent';
 import {validateEmail} from '../../../utils/validator';
 
 import {NavigationProp} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
+import {setIsLoggedIn, setUserType} from '../../../store/reducer/user';
 
 interface LoginProps {
   navigation: NavigationProp<any>;
@@ -13,6 +15,7 @@ interface LoginProps {
 
 const Login: React.FC<LoginProps> = ({navigation}) => {
   const {styles, sizes, colors} = useStyles();
+  const dispatch = useDispatch();
 
   const [selectedRole, setSelectedRole] = useState<'User' | 'Vendor'>('User');
   const [email, setEmail] = useState('');
@@ -31,12 +34,14 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
 
     if (isEmailValid && isPasswordValid && isChecked) {
       console.log('Form Data:', {
-        email,
-        password,
-        role: selectedRole,
+        email: email,
+        password: password,
+        role: selectedRole.toLowerCase(),
         termsAccepted: isChecked,
       });
-      navigation.navigate('HomeScreen');
+      dispatch(setUserType(selectedRole.toLowerCase()));
+      dispatch(setIsLoggedIn(true));
+      // navigation.navigate('HomeScreen');
     } else {
       console.log('Validation Failed. Please check your inputs.');
     }

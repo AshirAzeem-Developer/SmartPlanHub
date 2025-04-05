@@ -5,6 +5,8 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationContainer} from '@react-navigation/native';
 import AuthStack from './navigator.auth';
 import AppStack from './navigator.app';
+import {useSelector} from 'react-redux';
+import VendorStack from './navigator.vendor';
 
 // navigation imports
 // import ServiceProvider from './navigator.provider';
@@ -17,9 +19,23 @@ import AppStack from './navigator.app';
 
 function RootNav() {
   const isAuthenticated = false;
-  //   const user = useUserSelector();
-  //   const [isSplashVisible, setIsSplashVisible] = useState(true);
-  return <>{isAuthenticated ? <AppStack /> : <AuthStack />}</>;
+
+  const user = useSelector((state: any) => state.user);
+  console.log('This is the user type =>', user);
+  const [isSplashVisible, setIsSplashVisible] = useState(true);
+  return (
+    <>
+      {user.isLoggedIn ? (
+        user?.userType === 'user' ? (
+          <AppStack />
+        ) : (
+          <VendorStack />
+        )
+      ) : (
+        <AuthStack />
+      )}
+    </>
+  );
 }
 
 export default RootNav;
