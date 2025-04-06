@@ -17,7 +17,7 @@ const Stack = createNativeStackNavigator<AuthStackParamList>();
 function AuthStack() {
   return (
     <Stack.Navigator
-      initialRouteName="Login"
+      initialRouteName="AvailableBids"
       screenOptions={{
         headerShown: false,
       }}>

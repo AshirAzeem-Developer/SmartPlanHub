@@ -8,6 +8,8 @@ import PortfolioCard from '../../../components/PortfolioCard';
 import images from '../../../assets/images';
 import BidCard from '../../../components/BidCard';
 import ReviewCard from '../../../components/ReviewsCard';
+import FilterButtons from '../../../components/FilterButtons';
+import VendorProfile from '../../../components/VendorProfileCard';
 
 const AvailableBids = () => {
   const portfolios = [
@@ -48,8 +50,18 @@ const AvailableBids = () => {
     },
   ];
   return (
-    <ScrollView style={{flex: 1, backgroundColor: '#f5f5f5'}}>
+    <ScrollView style={{flex: 1, backgroundColor: '#f5f5f5', padding: 10}}>
       <SearchBar />
+      <FilterButtons />
+      <Text
+        style={{
+          fontSize: 25,
+          fontWeight: 'bold',
+          marginVertical: 10,
+          textAlign: 'center',
+        }}>
+        Available Bids
+      </Text>
       <View style={{padding: 10}}>
         <View>
           <Text style={{fontSize: 18, fontWeight: 'bold', marginVertical: 10}}>
@@ -61,6 +73,21 @@ const AvailableBids = () => {
             renderItem={({item}) => <BidCard bid={item} />}
           />
         </View>
+        <View>
+          <Text style={{fontSize: 25, fontWeight: 'bold', marginTop: 30}}>
+            About
+          </Text>
+          <VendorProfile />
+        </View>
+        <Text
+          style={{
+            fontSize: 25,
+            fontWeight: 'bold',
+            marginTop: 30,
+            marginVertical: 10,
+          }}>
+          Portfolio
+        </Text>
         <FlatList
           horizontal
           data={portfolios}

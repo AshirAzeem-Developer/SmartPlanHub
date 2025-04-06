@@ -23,8 +23,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     alignItems: 'center',
     marginBottom: 10,
+    marginTop: 15,
   },
-  input: {flex: 1, padding: 10},
+  input: {flex: 1, padding: 15},
   icon: {
     marginLeft: 5,
     width: 20,

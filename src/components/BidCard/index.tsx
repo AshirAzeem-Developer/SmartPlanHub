@@ -19,9 +19,14 @@ const BidCard: React.FC<BidCardProps> = ({bid}) => {
       {bid.delivery && (
         <Text style={styles.delivery}>Delivery: {bid.delivery}</Text>
       )}
-      <TouchableOpacity style={styles.acceptButton}>
-        <Text style={styles.buttonText}>Accept</Text>
-      </TouchableOpacity>
+      {bid.isNegotiable && (
+        <Text style={styles.delivery}>Flexible Timeline</Text>
+      )}
+      {!bid.isNegotiable && (
+        <TouchableOpacity style={styles.acceptButton}>
+          <Text style={styles.buttonText}>Accept</Text>
+        </TouchableOpacity>
+      )}
       {bid.isNegotiable ? (
         <TouchableOpacity style={styles.discussButton}>
           <Text style={styles.buttonText}>Start Discussion</Text>
@@ -46,7 +51,11 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   title: {fontSize: 16, fontWeight: 'bold'},
-  price: {fontSize: 18, color: '#333'},
+  price: {
+    fontSize: 23,
+    color: '#333',
+    fontWeight: 'bold',
+  },
   delivery: {fontSize: 14, color: '#777'},
   acceptButton: {
     backgroundColor: '#2ecc71',
@@ -56,8 +65,9 @@ const styles = StyleSheet.create({
   },
   discussButton: {
     backgroundColor: '#3498db',
-    padding: 10,
+    padding: 15,
     borderRadius: 5,
+    marginVertical: 8,
   },
   negotiateButton: {
     backgroundColor: '#ddd',

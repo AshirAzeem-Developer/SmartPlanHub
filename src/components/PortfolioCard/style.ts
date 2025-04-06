@@ -15,7 +15,8 @@ const useStyles = () => {
       height: sizes.HEIGHT * 0.28,
 
       marginBottom: 10,
-      marginHorizontal: sizes.WIDTH * 0.03,
+      marginHorizontal: sizes.WIDTH * 0.02,
+      marginTop: sizes.WIDTH * 0.02,
       backgroundColor: '#fff',
       borderRadius: sizes.WIDTH * 0.03,
       padding: sizes.WIDTH * 0.015,

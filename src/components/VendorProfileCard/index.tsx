@@ -10,15 +10,15 @@ const VendorProfile = () => {
       style={{
         flexDirection: 'row',
         justifyContent: 'space-between',
-        padding: 10,
-        marginHorizontal: 10,
+        // padding: 10,
+        marginHorizontal: 5,
         marginTop: 10,
       }}>
-      <View style={{width: screen.width * 0.55, paddingRight: 10}}>
+      <View style={{width: screen.width * 0.58, paddingRight: 10}}>
         <Text
           style={{
             fontSize: screen.width * 0.035,
-            fontWeight: 'bold',
+            // fontWeight: 'bold',
           }}>
           Professional service provider with over 10 years of experience.
         </Text>
