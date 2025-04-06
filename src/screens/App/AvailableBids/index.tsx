@@ -64,7 +64,7 @@ const AvailableBids = () => {
       </Text>
       <View style={{padding: 10}}>
         <View>
-          <Text style={{fontSize: 18, fontWeight: 'bold', marginVertical: 10}}>
+          <Text style={{fontSize: 20, fontWeight: 'bold', marginVertical: 10}}>
             Current Bids
           </Text>
           <FlatList
@@ -100,7 +100,7 @@ const AvailableBids = () => {
             />
           )}
         />
-        <Text style={{fontSize: 18, fontWeight: 'bold', marginTop: 10}}>
+        <Text style={{fontSize: 25, fontWeight: 'bold', marginTop: 10}}>
           Reviews
         </Text>
         <FlatList
