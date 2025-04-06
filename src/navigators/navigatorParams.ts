@@ -4,8 +4,10 @@ export type AuthStackParamList = {
   ForgotPassword: undefined;
   HomeScreen: undefined;
   VendorProfile: undefined;
+  AvailableBids: undefined;
 };
 
 export type AppStackParamsList = {
   HomeTabs: undefined;
+  AvailableBids: undefined;
 };

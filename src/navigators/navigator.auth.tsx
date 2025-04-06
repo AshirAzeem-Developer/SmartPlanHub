@@ -6,6 +6,7 @@ import Login from '../screens/Auth/Login';
 import Signup from '../screens/Auth/Signup';
 import HomeScreen from '../screens/App/HomeScreen';
 import VendorProfileScreen from '../screens/App/VendorProfile';
+import AvailableBids from '../screens/App/AvailableBids';
 
 //Screens
 
@@ -24,6 +25,7 @@ function AuthStack() {
       <Stack.Screen name="Signup" component={Signup} />
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="VendorProfile" component={VendorProfileScreen} />
+      <Stack.Screen name="AvailableBids" component={AvailableBids} />
     </Stack.Navigator>
   );
 }

@@ -3,6 +3,7 @@ import CreateBottomTabs from './CreateBottomTabs';
 import Home from '../screens/App/Home';
 import icons from '../assets/icons';
 import {AppStackParamsList} from './navigatorParams';
+import AvailableBids from '../screens/App/AvailableBids';
 
 const Stack = createNativeStackNavigator<AppStackParamsList>();
 
@@ -126,6 +127,7 @@ function AppStack() {
       }}
       initialRouteName="HomeTabs">
       <Stack.Screen name="HomeTabs" component={BottomTabs} />
+      <Stack.Screen name="AvailableBids" component={AvailableBids} />
       {/* <Stack.Screen name="ProfileSettings" component={ProfileSettings} /> */}
       {/* <Stack.Screen name="Notifications" component={Notifications} />
       <Stack.Screen
