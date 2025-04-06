@@ -1,10 +1,9 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import CreateBottomTabs from './CreateBottomTabs';
-import Home from '../screens/App/Home';
+import VendorHome from '../screens/Vendor/VendorHome';
 import icons from '../assets/icons';
 import {AppStackParamsList} from './navigatorParams';
-import AvailableBids from '../screens/App/AvailableBids';
-import Settings from '../screens/App/Settings';
+import Settings from '../screens/Vendor/Settings';
 
 const Stack = createNativeStackNavigator<AppStackParamsList>();
 
@@ -106,19 +105,19 @@ const Stack = createNativeStackNavigator<AppStackParamsList>();
 const BottomTabs = () => {
   return (
     <CreateBottomTabs
-      initialRouteName="Home"
+      initialRouteName="VendorHome"
       screens={[
         {
-          name: 'Home',
-          Component: Home,
+          name: 'VendorHome',
+          Component: VendorHome,
           icon: icons.SMART_PLAN_HUB_LOGO,
           selectedIcon: icons.SMART_PLAN_HUB_LOGO,
-          label: 'Home',
+          label: 'VendorHome',
         },
         {
           name: 'Settings',
           Component: Settings,
-          icon: icons.LOGOUT,
+          icon: icons.SMART_PLAN_HUB_LOGO,
           selectedIcon: icons.SMART_PLAN_HUB_LOGO,
           label: 'Settings',
         },
@@ -127,7 +126,7 @@ const BottomTabs = () => {
   );
 };
 
-function AppStack() {
+function VendorStack() {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -135,7 +134,6 @@ function AppStack() {
       }}
       initialRouteName="HomeTabs">
       <Stack.Screen name="HomeTabs" component={BottomTabs} />
-      <Stack.Screen name="AvailableBids" component={AvailableBids} />
       {/* <Stack.Screen name="ProfileSettings" component={ProfileSettings} /> */}
       {/* <Stack.Screen name="Notifications" component={Notifications} />
       <Stack.Screen
@@ -159,4 +157,4 @@ function AppStack() {
   );
 }
 
-export default AppStack;
+export default VendorStack;

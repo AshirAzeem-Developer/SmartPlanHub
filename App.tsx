@@ -2,7 +2,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import React, {useState} from 'react';
 
 //store
-import {Provider} from 'react-redux';
+import {Provider, useSelector} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import {store, persistor} from './src/store/store';
 import CustomSplash from './src/components/CustomSplash';
@@ -10,6 +10,7 @@ import RootNav from './src/navigators/navigator.root';
 
 const App = () => {
   const [show, setshow] = useState(true);
+
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
@@ -37,6 +38,7 @@ const DataWrapper = ({children}: {children: React.ReactNode}) => {
 
   // useOneSignalPush(userId?.toString(), userToken);
   // useHandleDeepLink();
+
   return (
     <>
       {children}
