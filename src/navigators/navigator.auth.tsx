@@ -17,15 +17,12 @@ const Stack = createNativeStackNavigator<AuthStackParamList>();
 function AuthStack() {
   return (
     <Stack.Navigator
-      initialRouteName="AvailableBids"
+      initialRouteName="Login"
       screenOptions={{
         headerShown: false,
       }}>
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Signup" component={Signup} />
-      <Stack.Screen name="HomeScreen" component={HomeScreen} />
-      <Stack.Screen name="VendorProfile" component={VendorProfileScreen} />
-      <Stack.Screen name="AvailableBids" component={AvailableBids} />
     </Stack.Navigator>
   );
 }

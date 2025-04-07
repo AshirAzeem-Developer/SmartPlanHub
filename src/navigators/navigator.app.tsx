@@ -5,6 +5,8 @@ import icons from '../assets/icons';
 import {AppStackParamsList} from './navigatorParams';
 import AvailableBids from '../screens/App/AvailableBids';
 import Settings from '../screens/App/Settings';
+import HomeScreen from '../screens/App/HomeScreen';
+import VendorProfileScreen from '../screens/App/VendorProfile';
 
 const Stack = createNativeStackNavigator<AppStackParamsList>();
 
@@ -133,28 +135,11 @@ function AppStack() {
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName="HomeTabs">
-      <Stack.Screen name="HomeTabs" component={BottomTabs} />
+      initialRouteName="HomeScreen">
+      {/* <Stack.Screen name="HomeTabs" component={BottomTabs} /> */}
+      <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="AvailableBids" component={AvailableBids} />
-      {/* <Stack.Screen name="ProfileSettings" component={ProfileSettings} /> */}
-      {/* <Stack.Screen name="Notifications" component={Notifications} />
-      <Stack.Screen
-        name="NotificationSettings"
-        component={NotificationSetting}
-      />
-      <Stack.Screen name="Support" component={Support} />
-      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
-      <Stack.Screen name="WorkDetails" component={WorkDetails} />
-      <Stack.Screen name="ProfileDetail" component={ProfileDetail} />
-      <Stack.Screen name="OrderSummary" component={OrderSummary} />
-      <Stack.Screen name="StartStopWorking" component={StartStopWorking} />
-      <Stack.Screen name="ChatOpen" component={ChatOpen} />
-      <Stack.Screen name="AllProviders" component={AllProviderCards} />
-      <Stack.Screen name="MapScreen" component={MapScreen} />
-      <Stack.Screen name="ChangePassword" component={ChangePassword} />
-      <Stack.Screen name="Review" component={AddReviewScreen} />
-
-      <Stack.Screen name="Language" component={Language} /> */}
+      <Stack.Screen name="VendorProfile" component={VendorProfileScreen} />
     </Stack.Navigator>
   );
 }

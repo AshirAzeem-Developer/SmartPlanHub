@@ -10,4 +10,6 @@ export type AuthStackParamList = {
 export type AppStackParamsList = {
   HomeTabs: undefined;
   AvailableBids: undefined;
+  HomeScreen: undefined;
+  VendorProfile: undefined;
 };

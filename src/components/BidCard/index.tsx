@@ -8,6 +8,7 @@ interface BidCardProps {
     price: string;
     delivery: string;
     isNegotiable?: boolean;
+    onPress: () => void;
   };
 }
 
@@ -23,16 +24,16 @@ const BidCard: React.FC<BidCardProps> = ({bid}) => {
         <Text style={styles.delivery}>Flexible Timeline</Text>
       )}
       {!bid.isNegotiable && (
-        <TouchableOpacity style={styles.acceptButton}>
+        <TouchableOpacity style={styles.acceptButton} onPress={bid.onPress}>
           <Text style={styles.buttonText}>Accept</Text>
         </TouchableOpacity>
       )}
       {bid.isNegotiable ? (
-        <TouchableOpacity style={styles.discussButton}>
+        <TouchableOpacity style={styles.discussButton} onPress={bid.onPress}>
           <Text style={styles.buttonText}>Start Discussion</Text>
         </TouchableOpacity>
       ) : (
-        <TouchableOpacity style={styles.negotiateButton}>
+        <TouchableOpacity style={styles.negotiateButton} onPress={bid.onPress}>
           <Text style={styles.negotiateText}>Negotiate</Text>
         </TouchableOpacity>
       )}
