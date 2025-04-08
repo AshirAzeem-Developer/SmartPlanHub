@@ -11,7 +11,7 @@ import {
   Image,
 } from 'react-native';
 import icons from '../../../assets/icons';
-const VendorHome = ({}) => {
+const VendorHome = ({naviagtion}: any) => {
   const {styles, colors} = useStyles();
 
   return (
@@ -66,7 +66,12 @@ const VendorHome = ({}) => {
             <Text style={styles.actionText}>Update Availability</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.actionButton}>
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={() => {
+              // Navigate to Service Management Screen
+              naviagtion.navigate('ServiceManagement');
+            }}>
             <Image
               source={icons.SETTINGS}
               style={{

@@ -16,6 +16,8 @@ import {useDispatch} from 'react-redux';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {screen} from '../utils/constants';
 import {setIsLoggedIn} from '../store/reducer/user';
+import ServiceManagementScreen from '../screens/Vendor/ServiceManagement';
+import BookingManagementScreen from '../screens/Vendor/BookingManagement';
 
 const Stack = createNativeStackNavigator<AppStackParamsList>();
 const Drawer = createDrawerNavigator();
@@ -58,7 +60,7 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
         <DrawerItem
           style={{
             position: 'absolute',
-            bottom: -screen.height * 0.8,
+            bottom: -screen.height * 0.7,
             left: 0,
             right: 0,
             backgroundColor: 'white',
@@ -88,9 +90,9 @@ function VendorStack() {
     <Drawer.Navigator
       screenOptions={{
         headerShown: false,
-        drawerActiveTintColor: 'black',
+        drawerActiveTintColor: 'grey',
 
-        drawerInactiveTintColor: 'green',
+        drawerInactiveTintColor: 'Black',
         drawerLabelStyle: {
           fontSize: 16,
           fontWeight: 'normal',
@@ -113,6 +115,38 @@ function VendorStack() {
         }}
         name="Home"
         component={VendorHome}
+      />
+      <Drawer.Screen
+        options={{
+          drawerIcon: () => (
+            <Image
+              source={icons.SETTINGS}
+              style={{
+                width: 24,
+                height: 24,
+              }}
+            />
+          ),
+          drawerLabel: 'Service Management',
+        }}
+        name="ServiceManagement"
+        component={ServiceManagementScreen}
+      />
+      <Drawer.Screen
+        options={{
+          drawerIcon: () => (
+            <Image
+              source={icons.CALENDAR}
+              style={{
+                width: 24,
+                height: 24,
+              }}
+            />
+          ),
+          drawerLabel: 'Booking Management',
+        }}
+        name="BookingManagement"
+        component={BookingManagementScreen}
       />
 
       {/* <Stack.Screen name="ProfileSettings" component={ProfileSettings} /> */}

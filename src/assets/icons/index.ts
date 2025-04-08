@@ -11,4 +11,5 @@ export default {
   NOTIFICATION: require('./notification.png'),
   DOLLAR: require('./dollar-symbol.png'),
   CALENDAR: require('./calendar.png'),
+  EDIT: require('./edit.png'),
 };
