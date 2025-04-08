@@ -4,104 +4,21 @@ import VendorHome from '../screens/Vendor/VendorHome';
 import icons from '../assets/icons';
 import {AppStackParamsList} from './navigatorParams';
 import Settings from '../screens/Vendor/Settings';
+import {
+  createDrawerNavigator,
+  DrawerContentComponentProps,
+  DrawerContentScrollView,
+  DrawerItem,
+  DrawerItemList,
+} from '@react-navigation/drawer';
+import {Image} from 'react-native';
+import {useDispatch} from 'react-redux';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {screen} from '../utils/constants';
+import {setIsLoggedIn} from '../store/reducer/user';
 
 const Stack = createNativeStackNavigator<AppStackParamsList>();
-
-// function ProfileStack() {
-//   return (
-//     <Stack.Navigator
-//       screenOptions={{
-//         headerShown: false,
-//       }}
-//       initialRouteName="Profile">
-//       <Stack.Screen name="Profile" component={Profile} />
-//       <Stack.Screen name="EditProfile" component={EditProfile} />
-//     </Stack.Navigator>
-//   );
-// }
-// function BookingStack() {
-//   const userType = useSelector(
-//     (state: any) => state?.user?.user?.user?.roleType,
-//   );
-//   return (
-//     <>
-//       <CreateTopTabs
-//         initialRouteName="Approved"
-//         screens={[
-//           {
-//             name: userType !== 'seeker' ? 'All Bookings' : 'Approved',
-//             Component: Approved,
-//             label: userType !== 'seeker' ? 'All Bookings' : 'Approved',
-//           },
-//           {
-//             name: userType !== 'seeker' ? 'Accepted ' : 'Pending',
-//             Component: Pending,
-//             label: userType !== 'seeker' ? 'Accepted ' : 'Pending',
-//           },
-//           {
-//             name: userType !== 'seeker' ? 'Rejected' : 'Cancelled',
-//             Component: Cancel,
-//             label: userType !== 'seeker' ? 'Rejected' : 'Cancelled',
-//           },
-//         ]}
-//         key={'BookingStack'}
-//       />
-//     </>
-//   );
-// }
-// function ChatStack() {
-//   return (
-//     <>
-//       <Stack.Navigator
-//         screenOptions={{
-//           headerShown: false,
-//         }}
-//         initialRouteName="Chat">
-//         <Stack.Screen name="Chat" component={Chat} />
-//         <Stack.Screen name="Chatlist" component={Chatlist} />
-//       </Stack.Navigator>
-//     </>
-//   );
-// }
-
-// const BottomTabs = () => {
-//   return (
-//     <CreateBottomTabs
-//       initialRouteName="Home"
-//       screens={[
-//         {
-//           name: 'Home',
-//           Component: Home,
-//           icon: icons.HOME_TAB,
-//           selectedIcon: icons.HOME_TAB_ACTIVE,
-//           label: 'Home',
-//         },
-//         {
-//           name: 'Bookings',
-//           Component: BookingStack,
-//           icon: icons.BOOKINGS_TAB,
-//           selectedIcon: icons.BOOKINGS_TAB_ACTIVE,
-//           label: 'Bookings',
-//         },
-//         {
-//           name: 'Messages',
-//           Component: ChatStack,
-//           icon: icons.MESSAGE_TAB,
-//           selectedIcon: icons.MESSAGE_TAB_ACTIVE,
-//           label: 'Messages',
-//         },
-//         {
-//           name: 'Profile',
-//           Component: ProfileStack,
-//           icon: icons.PROFILE_TAB,
-//           selectedIcon: icons.PROFILE_TAB_ACTIVE,
-//           label: 'Profile',
-//         },
-//       ]}
-//     />
-//   );
-// };
-
+const Drawer = createDrawerNavigator();
 const BottomTabs = () => {
   return (
     <CreateBottomTabs
@@ -125,15 +42,79 @@ const BottomTabs = () => {
     />
   );
 };
+function CustomDrawerContent(props: DrawerContentComponentProps) {
+  const navigation = useNavigation<NavigationProp<any>>();
 
+  const dispatch = useDispatch();
+
+  const handleLogout = async () => {
+    dispatch(setIsLoggedIn(false));
+  };
+
+  return (
+    <>
+      <DrawerContentScrollView {...props}>
+        <DrawerItemList {...props} />
+        <DrawerItem
+          style={{
+            position: 'absolute',
+            bottom: -screen.height * 0.8,
+            left: 0,
+            right: 0,
+            backgroundColor: 'white',
+          }}
+          label="Logout"
+          icon={() => (
+            <Image
+              tintColor={'black'}
+              source={icons.LOGOUT}
+              width={20}
+              height={20}
+              style={{
+                width: 24,
+                height: 24,
+              }}
+            />
+          )}
+          onPress={handleLogout}
+          labelStyle={{color: 'black', fontSize: 16}}
+        />
+      </DrawerContentScrollView>
+    </>
+  );
+}
 function VendorStack() {
   return (
-    <Stack.Navigator
+    <Drawer.Navigator
       screenOptions={{
         headerShown: false,
+        drawerActiveTintColor: 'black',
+
+        drawerInactiveTintColor: 'green',
+        drawerLabelStyle: {
+          fontSize: 16,
+          fontWeight: 'normal',
+        },
       }}
-      initialRouteName="HomeTabs">
-      <Stack.Screen name="HomeTabs" component={BottomTabs} />
+      drawerContent={props => <CustomDrawerContent {...props} />}
+      initialRouteName="Home">
+      <Drawer.Screen
+        options={{
+          drawerIcon: () => (
+            <Image
+              source={icons.HOME}
+              style={{
+                width: 24,
+                height: 24,
+              }}
+            />
+          ),
+          drawerLabel: 'Home',
+        }}
+        name="Home"
+        component={VendorHome}
+      />
+
       {/* <Stack.Screen name="ProfileSettings" component={ProfileSettings} /> */}
       {/* <Stack.Screen name="Notifications" component={Notifications} />
       <Stack.Screen
@@ -153,7 +134,7 @@ function VendorStack() {
       <Stack.Screen name="Review" component={AddReviewScreen} />
 
       <Stack.Screen name="Language" component={Language} /> */}
-    </Stack.Navigator>
+    </Drawer.Navigator>
   );
 }
 

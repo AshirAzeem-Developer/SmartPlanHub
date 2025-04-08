@@ -7,26 +7,29 @@ import {PersistGate} from 'redux-persist/integration/react';
 import {store, persistor} from './src/store/store';
 import CustomSplash from './src/components/CustomSplash';
 import RootNav from './src/navigators/navigator.root';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 const App = () => {
   const [show, setshow] = useState(true);
 
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <NavigationContainer>
-          {show ? (
-            <CustomSplash show={show} onEnd={() => setshow(false)} />
-          ) : (
-            <DataWrapper
-              children={<RootNav />}
-              key={Math.random().toString()}
-            />
-          )}
-          {/* <RootNavigator /> */}
-        </NavigationContainer>
-      </PersistGate>
-    </Provider>
+    <GestureHandlerRootView style={{flex: 1}}>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <NavigationContainer>
+            {show ? (
+              <CustomSplash show={show} onEnd={() => setshow(false)} />
+            ) : (
+              <DataWrapper
+                children={<RootNav />}
+                key={Math.random().toString()}
+              />
+            )}
+            {/* <RootNavigator /> */}
+          </NavigationContainer>
+        </PersistGate>
+      </Provider>
+    </GestureHandlerRootView>
   );
 };
 

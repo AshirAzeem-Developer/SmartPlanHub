@@ -1,7 +1,14 @@
 export default {
-  SMART_PLAN_HUB_LOGO: require('./SmatPlanHubLogo.png'),
+  SMART_PLAN_HUB_LOGO: require('./smartPlanHubLogo.png'),
   GOOGLE: require('./google.png'),
   FACEBOOK: require('./facebook.png'),
-  SEARCH_ICON: require('./search-icon.png'),
+  SEARCH_ICON: require('./searchIcon.png'),
   LOGOUT: require('./logout.png'),
+  BACK_ARROW: require('./back.png'),
+  MENU: require('./menu.png'),
+  HOME: require('./home.png'),
+  SETTINGS: require('./settings.png'),
+  NOTIFICATION: require('./notification.png'),
+  DOLLAR: require('./dollar-symbol.png'),
+  CALENDAR: require('./calendar.png'),
 };

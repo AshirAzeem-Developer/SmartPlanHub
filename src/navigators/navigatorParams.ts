@@ -13,3 +13,6 @@ export type AppStackParamsList = {
   HomeScreen: undefined;
   VendorProfile: undefined;
 };
+export type DrawerParamList = {
+  VendorHome: undefined;
+};
