@@ -1,7 +1,7 @@
 import {StyleSheet} from 'react-native';
-import {useColors} from '../../../constants/color';
 import {useSizes} from '../../../constants/size';
 import {getGlobalStyles} from '../../../constants/globalStyles';
+import {useColors} from '../../../constants/color';
 
 const useStyles = () => {
   const colors = useColors();
@@ -10,47 +10,47 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     container: {
-      padding: 20,
+      padding: sizes.WIDTH * 0.05,
       backgroundColor: '#fff',
       flex: 1,
     },
     heading: {
       color: '#fff',
-      fontSize: 24,
+      fontSize: sizes.WIDTH * 0.06,
       fontWeight: '700',
-      marginBottom: 10,
+      marginBottom: sizes.HEIGHT * 0.015,
     },
     subHeading: {
       color: '#fff',
-      fontSize: 18,
+      fontSize: sizes.WIDTH * 0.045,
       fontWeight: '600',
     },
     description: {
-      fontSize: 14,
+      fontSize: sizes.WIDTH * 0.035,
       color: '#f4f4f4',
-      marginBottom: 20,
+      marginBottom: sizes.HEIGHT * 0.025,
     },
     cardContainer: {
       flexDirection: 'row',
       flexWrap: 'wrap',
-      gap: 10,
-      marginBottom: 20,
+      gap: sizes.WIDTH * 0.025,
+      marginBottom: sizes.HEIGHT * 0.025,
     },
     card: {
       width: '48%',
       backgroundColor: '#f5f5f5',
-      padding: 15,
-      borderRadius: 10,
-      marginBottom: 10,
+      padding: sizes.WIDTH * 0.04,
+      borderRadius: sizes.WIDTH * 0.025,
+      marginBottom: sizes.HEIGHT * 0.015,
     },
     cardTitle: {
-      fontSize: 16,
+      fontSize: sizes.WIDTH * 0.04,
       fontWeight: '600',
     },
     cardValue: {
-      fontSize: 22,
+      fontSize: sizes.WIDTH * 0.055,
       fontWeight: '700',
-      marginVertical: 5,
+      marginVertical: sizes.HEIGHT * 0.007,
     },
     cardSubText: {
       color: '#777',
@@ -60,35 +60,35 @@ const useStyles = () => {
       textDecorationLine: 'underline',
     },
     quickActionsTitle: {
-      fontSize: 16,
+      fontSize: sizes.WIDTH * 0.04,
       fontWeight: '700',
-      marginBottom: 10,
+      marginBottom: sizes.HEIGHT * 0.015,
     },
     quickActionsContainer: {
       flexDirection: 'row',
       flexWrap: 'wrap',
-      gap: 10,
+      gap: sizes.WIDTH * 0.025,
     },
     actionButton: {
       width: '48%',
       flexDirection: 'row',
       alignItems: 'center',
-      gap: 10,
+      gap: sizes.WIDTH * 0.025,
       backgroundColor: '#f5f5f5',
-      padding: 12,
-      borderRadius: 10,
-      marginBottom: 10,
+      padding: sizes.WIDTH * 0.035,
+      borderRadius: sizes.WIDTH * 0.025,
+      marginBottom: sizes.HEIGHT * 0.015,
     },
     actionText: {
-      fontSize: 14,
+      fontSize: sizes.WIDTH * 0.035,
       fontWeight: '500',
     },
   });
 
   return {
-    colors,
     sizes,
     styles,
+    globalStyles,
   };
 };
 

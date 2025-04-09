@@ -10,94 +10,92 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     container: {
-      padding: sizes.WIDTH * 0.05,
+      flex: 1,
       backgroundColor: '#fff',
     },
+    header: {
+      backgroundColor: '#000',
+      padding: sizes.HEIGHT * 0.025,
+      borderBottomLeftRadius: sizes.WIDTH * 0.05,
+      borderBottomRightRadius: sizes.WIDTH * 0.05,
+    },
     heading: {
-      color: '#fff',
       fontSize: sizes.WIDTH * 0.055,
       fontWeight: '700',
+      color: '#fff',
     },
     subHeading: {
-      color: '#fff',
       fontSize: sizes.WIDTH * 0.04,
       fontWeight: '600',
-      marginTop: sizes.HEIGHT * 0.006,
+      marginTop: sizes.HEIGHT * 0.005,
+      color: '#fff',
     },
     description: {
-      color: '#666666',
-      marginBottom: sizes.HEIGHT * 0.02,
+      color: '#bbb',
+      marginTop: sizes.HEIGHT * 0.004,
     },
-    calendarButton: {
+    viewAllButton: {
       flexDirection: 'row',
       backgroundColor: '#000',
       padding: sizes.HEIGHT * 0.015,
-      borderRadius: sizes.WIDTH * 0.02,
+      margin: sizes.WIDTH * 0.05,
+      borderRadius: sizes.WIDTH * 0.03,
       alignItems: 'center',
       justifyContent: 'center',
-      gap: sizes.WIDTH * 0.015,
-      marginBottom: sizes.HEIGHT * 0.025,
+      gap: 8,
     },
-    calendarText: {
+    viewAllText: {
       color: '#fff',
       fontWeight: '600',
     },
-    bookingsContainer: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      gap: sizes.WIDTH * 0.025,
-      marginBottom: sizes.HEIGHT * 0.03,
+    bidCardsContainer: {
+      paddingHorizontal: sizes.WIDTH * 0.05,
     },
-    bookingCard: {
-      width: '100%',
+    bidCard: {
       backgroundColor: '#fff',
       borderRadius: sizes.WIDTH * 0.03,
       padding: sizes.HEIGHT * 0.02,
       marginBottom: sizes.HEIGHT * 0.02,
       shadowColor: '#000',
       shadowOffset: {width: 0, height: 2},
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      elevation: 4,
+      shadowOpacity: 0.08,
+      shadowRadius: 6,
+      elevation: 3,
     },
     cardHeader: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems: 'center',
-      marginBottom: sizes.HEIGHT * 0.01,
+      marginBottom: sizes.HEIGHT * 0.012,
     },
     cardTitle: {
       fontSize: sizes.WIDTH * 0.04,
       fontWeight: '700',
     },
     statusTag: {
-      paddingVertical: sizes.HEIGHT * 0.005,
       paddingHorizontal: sizes.WIDTH * 0.025,
-      borderRadius: sizes.WIDTH * 0.05,
+      paddingVertical: sizes.HEIGHT * 0.005,
+      borderRadius: sizes.WIDTH * 0.06,
     },
     statusText: {
       fontSize: sizes.WIDTH * 0.03,
       fontWeight: '600',
       color: '#fff',
     },
-    statusPending: {
-      backgroundColor: '#f4c430',
+    statusOpen: {
+      backgroundColor: '#4a90e2',
     },
-    statusConfirmed: {
+    statusPlaced: {
       backgroundColor: '#4CAF50',
     },
-    statusDeclined: {
-      backgroundColor: '#f44336',
-    },
     cardBody: {
-      gap: sizes.HEIGHT * 0.01,
+      gap: sizes.HEIGHT * 0.008,
+    },
+    bidInfo: {
+      fontSize: sizes.WIDTH * 0.033,
+      color: '#333',
     },
     label: {
       fontWeight: '600',
-    },
-    bookingInfo: {
-      fontSize: sizes.WIDTH * 0.032,
-      color: '#333',
     },
     buttonGroup: {
       flexDirection: 'row',
@@ -105,7 +103,7 @@ const useStyles = () => {
       marginTop: sizes.HEIGHT * 0.015,
     },
     acceptBtn: {
-      backgroundColor: '#4CAF50',
+      backgroundColor: '#000',
       paddingVertical: sizes.HEIGHT * 0.01,
       paddingHorizontal: sizes.WIDTH * 0.04,
       borderRadius: sizes.WIDTH * 0.025,
@@ -126,135 +124,97 @@ const useStyles = () => {
       marginTop: sizes.HEIGHT * 0.015,
       textDecorationLine: 'underline',
     },
-    availabilityHeading: {
+    notificationHeading: {
       fontSize: sizes.WIDTH * 0.04,
       fontWeight: '700',
-      marginBottom: sizes.HEIGHT * 0.015,
+      marginHorizontal: sizes.WIDTH * 0.05,
+      marginTop: sizes.HEIGHT * 0.025,
+      marginBottom: sizes.HEIGHT * 0.012,
     },
-    availabilityRow: {
+    notificationCard: {
+      backgroundColor: '#f9f9f9',
+      marginHorizontal: sizes.WIDTH * 0.05,
+      padding: sizes.HEIGHT * 0.015,
+      borderRadius: sizes.WIDTH * 0.025,
       flexDirection: 'row',
       justifyContent: 'space-between',
-      paddingVertical: sizes.HEIGHT * 0.015,
-      borderBottomWidth: 1,
-      borderBottomColor: '#eee',
-    },
-    dayText: {
-      fontSize: sizes.WIDTH * 0.035,
-      fontWeight: '500',
-    },
-    timeContainer: {
-      flexDirection: 'row',
       alignItems: 'center',
-      gap: sizes.WIDTH * 0.015,
+      marginBottom: sizes.HEIGHT * 0.015,
+      gap: sizes.WIDTH * 0.02,
     },
-    timeText: {
+    notificationTitle: {
+      fontWeight: '600',
       fontSize: sizes.WIDTH * 0.035,
-      marginRight: sizes.WIDTH * 0.01,
+    },
+    notificationMessage: {
+      flex: 1,
+      fontSize: sizes.WIDTH * 0.033,
+      color: '#555',
     },
     modalOverlay: {
-      flex: 1,
-      backgroundColor: '#000000aa',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      bottom: 0,
+      right: 0,
+      backgroundColor: '#00000088',
       justifyContent: 'center',
+      alignItems: 'center',
       padding: sizes.WIDTH * 0.05,
+      zIndex: 10,
     },
-    modalContent: {
+    modalCard: {
+      width: '100%',
       backgroundColor: '#fff',
       borderRadius: sizes.WIDTH * 0.03,
-      padding: sizes.WIDTH * 0.05,
+      padding: sizes.HEIGHT * 0.025,
+      elevation: 5,
     },
     modalTitle: {
       fontSize: sizes.WIDTH * 0.045,
       fontWeight: '700',
-      marginBottom: sizes.HEIGHT * 0.015,
+      marginBottom: sizes.HEIGHT * 0.02,
+      textAlign: 'center',
     },
     input: {
       borderWidth: 1,
       borderColor: '#ccc',
-      padding: sizes.WIDTH * 0.03,
-      borderRadius: sizes.WIDTH * 0.02,
-      marginBottom: sizes.HEIGHT * 0.015,
+      borderRadius: sizes.WIDTH * 0.025,
+
+      marginBottom: sizes.HEIGHT * 0.025,
+      fontSize: sizes.WIDTH * 0.035,
     },
     modalButtons: {
       flexDirection: 'row',
-      justifyContent: 'flex-end',
-      gap: sizes.WIDTH * 0.025,
-    },
-    saveBtn: {
-      backgroundColor: '#000',
-      padding: sizes.HEIGHT * 0.015,
-      borderRadius: sizes.WIDTH * 0.02,
-    },
-    cancelBtn: {
-      padding: sizes.HEIGHT * 0.015,
-    },
-    saveText: {
-      color: '#fff',
-      fontWeight: '600',
-    },
-    cancelText: {
-      color: '#000',
-      fontWeight: '500',
-    },
-    availabilityModalOverlay: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: sizes.WIDTH * 0.05,
-    },
-    availabilityModalCard: {
-      backgroundColor: '#fff',
-      borderRadius: sizes.WIDTH * 0.03,
-      padding: sizes.WIDTH * 0.05,
-      width: '100%',
-      shadowColor: '#000',
-      shadowOffset: {width: 0, height: 2},
-      shadowOpacity: 0.1,
-      shadowRadius: 6,
-      elevation: 5,
-    },
-    availabilityModalTitle: {
-      fontSize: sizes.WIDTH * 0.045,
-      fontWeight: '700',
-      textAlign: 'center',
-      marginBottom: sizes.HEIGHT * 0.02,
-    },
-    availabilityInput: {
-      borderWidth: 1,
-      borderColor: '#ccc',
-      borderRadius: sizes.WIDTH * 0.025,
-      paddingHorizontal: sizes.WIDTH * 0.03,
-      paddingVertical: sizes.HEIGHT * 0.015,
-      fontSize: sizes.WIDTH * 0.035,
-      marginBottom: sizes.HEIGHT * 0.025,
-    },
-    availabilityBtnGroup: {
-      flexDirection: 'row',
       justifyContent: 'space-between',
     },
-    availabilitySaveBtn: {
+    modalSaveBtn: {
       backgroundColor: '#000',
       paddingVertical: sizes.HEIGHT * 0.015,
       paddingHorizontal: sizes.WIDTH * 0.05,
       borderRadius: sizes.WIDTH * 0.025,
     },
-    availabilityCancelBtn: {
+    modalCancelBtn: {
       backgroundColor: '#f2f2f2',
       paddingVertical: sizes.HEIGHT * 0.015,
       paddingHorizontal: sizes.WIDTH * 0.05,
       borderRadius: sizes.WIDTH * 0.025,
     },
-    availabilitySaveText: {
+    modalSaveText: {
       color: '#fff',
       fontWeight: '600',
-      fontSize: sizes.WIDTH * 0.035,
     },
-    availabilityCancelText: {
-      color: '#333',
+    modalCancelText: {
+      color: '#000',
       fontWeight: '600',
-      fontSize: sizes.WIDTH * 0.035,
     },
   });
 
-  return {sizes, styles, globalStyles};
+  return {
+    sizes,
+    styles,
+    globalStyles,
+  };
 };
 
 export default useStyles;

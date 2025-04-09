@@ -12,4 +12,12 @@ export default {
   DOLLAR: require('./dollar-symbol.png'),
   CALENDAR: require('./calendar.png'),
   EDIT: require('./edit.png'),
+  BOLT: require('./flash.png'),
+  STAR: require('./star.png'),
+  CUSTOMER_REVIEW: require('./customer-review.png'),
+  TICKET: require('./ticket.png'),
+  STORE: require('./store.png'),
+  PEOPLE: require('./people.png'),
+  ANALYTICS: require('./analytics.png'),
+  ADMIN: require('./administrator.png'),
 };

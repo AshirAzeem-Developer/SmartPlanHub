@@ -85,7 +85,7 @@ const AddServiceModalView = ({
 };
 
 const ServiceManagementScreen = () => {
-  const {colors, styles} = useStyles();
+  const {styles} = useStyles();
   const [modalVisible, setModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);

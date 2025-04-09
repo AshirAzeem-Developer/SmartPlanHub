@@ -18,6 +18,9 @@ import {screen} from '../utils/constants';
 import {setIsLoggedIn} from '../store/reducer/user';
 import ServiceManagementScreen from '../screens/Vendor/ServiceManagement';
 import BookingManagementScreen from '../screens/Vendor/BookingManagement';
+import BiddingManagementScreen from '../screens/Vendor/BiddingManagement';
+import RatingsAndReviewsScreen from '../screens/Vendor/RatingsAndReviews';
+import AdminDashboardScreen from '../screens/Vendor/AdminDashboard';
 
 const Stack = createNativeStackNavigator<AppStackParamsList>();
 const Drawer = createDrawerNavigator();
@@ -58,13 +61,6 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
       <DrawerContentScrollView {...props}>
         <DrawerItemList {...props} />
         <DrawerItem
-          style={{
-            position: 'absolute',
-            bottom: -screen.height * 0.7,
-            left: 0,
-            right: 0,
-            backgroundColor: 'white',
-          }}
           label="Logout"
           icon={() => (
             <Image
@@ -148,26 +144,54 @@ function VendorStack() {
         name="BookingManagement"
         component={BookingManagementScreen}
       />
-
-      {/* <Stack.Screen name="ProfileSettings" component={ProfileSettings} /> */}
-      {/* <Stack.Screen name="Notifications" component={Notifications} />
-      <Stack.Screen
-        name="NotificationSettings"
-        component={NotificationSetting}
+      <Drawer.Screen
+        options={{
+          drawerIcon: () => (
+            <Image
+              source={icons.BOLT}
+              style={{
+                width: 24,
+                height: 24,
+              }}
+            />
+          ),
+          drawerLabel: 'Bidding Management',
+        }}
+        name="BiddingManagement"
+        component={BiddingManagementScreen}
       />
-      <Stack.Screen name="Support" component={Support} />
-      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
-      <Stack.Screen name="WorkDetails" component={WorkDetails} />
-      <Stack.Screen name="ProfileDetail" component={ProfileDetail} />
-      <Stack.Screen name="OrderSummary" component={OrderSummary} />
-      <Stack.Screen name="StartStopWorking" component={StartStopWorking} />
-      <Stack.Screen name="ChatOpen" component={ChatOpen} />
-      <Stack.Screen name="AllProviders" component={AllProviderCards} />
-      <Stack.Screen name="MapScreen" component={MapScreen} />
-      <Stack.Screen name="ChangePassword" component={ChangePassword} />
-      <Stack.Screen name="Review" component={AddReviewScreen} />
-
-      <Stack.Screen name="Language" component={Language} /> */}
+      <Drawer.Screen
+        options={{
+          drawerIcon: () => (
+            <Image
+              source={icons.CUSTOMER_REVIEW}
+              style={{
+                width: 24,
+                height: 24,
+              }}
+            />
+          ),
+          drawerLabel: 'Ratings and Review Management',
+        }}
+        name="RatingsAndReviewManagement"
+        component={RatingsAndReviewsScreen}
+      />
+      <Drawer.Screen
+        options={{
+          drawerIcon: () => (
+            <Image
+              source={icons.ADMIN}
+              style={{
+                width: 24,
+                height: 24,
+              }}
+            />
+          ),
+          drawerLabel: 'Admin Dashboard',
+        }}
+        name="AdminDashboard"
+        component={AdminDashboardScreen}
+      />
     </Drawer.Navigator>
   );
 }
