@@ -10,10 +10,11 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     container: {
-      flex: 1,
+      height: sizes.HEIGHT * 0.8,
       backgroundColor: '#fff',
       padding: 20,
       justifyContent: 'center',
+      // marginTop: -sizes.HEIGHT * 0.0,
     },
     title: {
       fontSize: 22,
@@ -125,8 +126,8 @@ const useStyles = () => {
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
-      marginTop: sizes.HEIGHT * 0.02,
-      marginBottom: sizes.HEIGHT * 0.02,
+      marginTop: sizes.HEIGHT * 0.005,
+      marginBottom: sizes.HEIGHT * 0.005,
     },
   });
 
