@@ -36,25 +36,25 @@ const VendorProfileScreen: React.FC<VendorProfileScreenProps> = ({
     {
       id: 1,
       image: images.VENDOR,
-      name: "John's Professional Services",
+      name: "Khan's Photography & Events",
       rating: 5,
     },
     {
       id: 2,
       image: images.VENDOR,
-      name: 'Vendor Name',
+      name: 'Lahore Wedding Planners',
       rating: 4,
     },
     {
       id: 3,
       image: images.VENDOR,
-      name: 'Vendor Name',
+      name: 'Karachi Moments Studio',
       rating: 4,
     },
     {
       id: 4,
       image: images.VENDOR,
-      name: 'Vendor Name',
+      name: 'Islamabad Event Experts',
       rating: 4,
     },
   ];
@@ -62,16 +62,16 @@ const VendorProfileScreen: React.FC<VendorProfileScreenProps> = ({
   const reviewsData = [
     {
       id: 1,
-      reviewer: 'Sarah Johnson',
-      date: 'May 1, 2024',
-      review: 'Amazing service! Very professional.',
+      reviewer: 'Areeba Siddiqui',
+      date: 'April 1, 2025',
+      review: 'Bohat zabardast service thi! Highly recommended.',
       image: images.VENDOR,
     },
     {
       id: 2,
-      reviewer: 'Michael Smith',
-      date: 'April 30, 2024',
-      review: 'Excellent work, highly recommend!',
+      reviewer: 'Usman Javed',
+      date: 'March 28, 2025',
+      review: 'Time pe kaam deliver kia, great experience!',
       image: images.VENDOR,
     },
   ];
