@@ -11,8 +11,8 @@ import {
   Image,
 } from 'react-native';
 import icons from '../../../assets/icons';
-const VendorHome = ({naviagtion}: any) => {
-  const {styles, colors} = useStyles();
+const VendorHome = ({navigation}: any) => {
+  const {styles, sizes} = useStyles();
 
   return (
     <>
@@ -70,7 +70,7 @@ const VendorHome = ({naviagtion}: any) => {
             style={styles.actionButton}
             onPress={() => {
               // Navigate to Service Management Screen
-              naviagtion.navigate('ServiceManagement');
+              navigation.navigate('ServiceManagement');
             }}>
             <Image
               source={icons.SETTINGS}

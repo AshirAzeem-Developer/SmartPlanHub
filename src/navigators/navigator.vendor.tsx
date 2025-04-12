@@ -94,7 +94,7 @@ function VendorStack() {
           fontWeight: 'normal',
         },
       }}
-      drawerContent={props => <CustomDrawerContent {...props} />}
+      drawerContent={(props: any) => <CustomDrawerContent {...props} />}
       initialRouteName="Home">
       <Drawer.Screen
         options={{
