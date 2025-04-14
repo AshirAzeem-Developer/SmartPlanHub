@@ -17,6 +17,7 @@ import useStyles from './style';
 import images from '../../../assets/images';
 import {screen} from '../../../utils/constants';
 import {NavigationProp} from '@react-navigation/native';
+import FilterDropdownButton from '../../../components/FilterButtons';
 
 interface VendorProfileScreenProps {
   navigation: NavigationProp<any>; // Define your navigation prop type here
@@ -26,6 +27,18 @@ const VendorProfileScreen: React.FC<VendorProfileScreenProps> = ({
   navigation,
 }) => {
   const {styles} = useStyles();
+  const [selectedService, setSelectedService] = React.useState<string | null>(
+    null,
+  );
+  const [selectedLocation, setSelectedLocation] = React.useState<string | null>(
+    null,
+  );
+  const [selectedPriceRange, setSelectedPriceRange] = React.useState<
+    string | null
+  >(null);
+  const [selectedRating, setSelectedRating] = React.useState<string | null>(
+    null,
+  );
   const pricingData = [
     {title: 'Basic Package', price: '$99', description: 'Standard service'},
     {title: 'Premium Package', price: '$199', description: 'Enhanced service'},
@@ -79,7 +92,38 @@ const VendorProfileScreen: React.FC<VendorProfileScreenProps> = ({
   return (
     <ScrollView style={{padding: 20}}>
       <SearchBar />
-      <FilterButtons />
+      <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 10}}>
+        <FilterDropdownButton
+          label="Service Type"
+          selectedValue={selectedService}
+          options={['Plumbing', 'Cleaning', 'Electrician']}
+          onSelect={value => setSelectedService(value)}
+        />
+        <FilterDropdownButton
+          label="Location"
+          selectedValue={selectedLocation}
+          options={['Karachi', 'Lahore', 'Islamabad']}
+          onSelect={value => setSelectedLocation(value)}
+        />
+        <FilterDropdownButton
+          label="Price Range"
+          selectedValue={selectedPriceRange}
+          options={[
+            '$0 - $50',
+            '$51 - $100',
+            '$101 - $200',
+            '$201 - $500',
+            '$501+',
+          ]}
+          onSelect={value => setSelectedPriceRange(value)}
+        />
+        <FilterDropdownButton
+          label="Rating"
+          selectedValue={selectedRating}
+          options={['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars']}
+          onSelect={value => setSelectedRating(value)}
+        />
+      </View>
       <View
         style={{
           flexDirection: 'row',

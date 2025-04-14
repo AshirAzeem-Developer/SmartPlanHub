@@ -17,6 +17,7 @@ import GenericModal from '../../../components/Modal';
 import InputComponent from '../../../components/global/InputComponent';
 import BookingDetailsModal from './BookingDetailsModal';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import {screen} from '../../../utils/constants';
 
 const initialBookings = [
   {
@@ -143,6 +144,10 @@ const BookingManagementScreen = () => {
         </Text>
       </View>
       <ScrollView
+        contentContainerStyle={{
+          paddingBottom: screen.height * 0.1,
+          flexGrow: 1,
+        }}
         style={styles.container}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

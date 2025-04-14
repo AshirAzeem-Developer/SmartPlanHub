@@ -10,6 +10,7 @@ import {
 import useStyles from './style';
 import icons from '../../../assets/icons';
 import CustomHeader from '../../../components/CustomHeader/CustomHeader';
+import {screen} from '../../../utils/constants';
 
 const RatingsAndReviewsScreen = () => {
   const {styles} = useStyles();
@@ -43,7 +44,11 @@ const RatingsAndReviewsScreen = () => {
         <Text style={styles.subHeading}>Customer Feedback</Text>
         <Text style={styles.description}>Manage your reviews and ratings</Text>
       </View>
-      <ScrollView style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={{
+          paddingBottom: screen.height * 0.1,
+        }}>
         <TouchableOpacity style={styles.overallRatingBtn}>
           <Image
             source={icons.STAR}

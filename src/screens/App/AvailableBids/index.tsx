@@ -20,10 +20,23 @@ import VendorProfile from '../../../components/VendorProfileCard';
 import GenericModal from '../../../components/Modal';
 import CustomRequestModal from '../../../components/CustomServiceRequest';
 import ServiceReviewForm from '../../../components/Review';
+import FilterDropdownButton from '../../../components/FilterButtons';
 
 const AvailableBids = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isReviewModal, setIsReviewModal] = useState(false);
+  const [selectedService, setSelectedService] = React.useState<string | null>(
+    null,
+  );
+  const [selectedLocation, setSelectedLocation] = React.useState<string | null>(
+    null,
+  );
+  const [selectedPriceRange, setSelectedPriceRange] = React.useState<
+    string | null
+  >(null);
+  const [selectedRating, setSelectedRating] = React.useState<string | null>(
+    null,
+  );
   const [onSubmit, setOnSubmit] = useState();
 
   const portfolios = [
@@ -86,7 +99,38 @@ const AvailableBids = () => {
     <>
       <ScrollView style={{flex: 1, backgroundColor: '#f5f5f5', padding: 10}}>
         <SearchBar />
-        <FilterButtons />
+        <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 10}}>
+          <FilterDropdownButton
+            label="Service Type"
+            selectedValue={selectedService}
+            options={['Plumbing', 'Cleaning', 'Electrician']}
+            onSelect={value => setSelectedService(value)}
+          />
+          <FilterDropdownButton
+            label="Location"
+            selectedValue={selectedLocation}
+            options={['Karachi', 'Lahore', 'Islamabad']}
+            onSelect={value => setSelectedLocation(value)}
+          />
+          <FilterDropdownButton
+            label="Price Range"
+            selectedValue={selectedPriceRange}
+            options={[
+              '$0 - $50',
+              '$51 - $100',
+              '$101 - $200',
+              '$201 - $500',
+              '$501+',
+            ]}
+            onSelect={value => setSelectedPriceRange(value)}
+          />
+          <FilterDropdownButton
+            label="Rating"
+            selectedValue={selectedRating}
+            options={['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars']}
+            onSelect={value => setSelectedRating(value)}
+          />
+        </View>
         <Text
           style={{
             fontSize: 25,

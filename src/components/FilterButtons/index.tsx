@@ -1,48 +1,53 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-} from 'react-native';
+import React, {useState} from 'react';
+import {TouchableOpacity, Text, StyleSheet, View, FlatList} from 'react-native';
 import useStyles from './style';
 
-const FilterButtons = () => {
-  const {styles, sizes, colors} = useStyles();
+type FilterDropdownButtonProps = {
+  label: string;
+  options: string[];
+  selectedValue: string | null;
+  onSelect: (value: string) => void;
+};
+
+const FilterDropdownButton: React.FC<FilterDropdownButtonProps> = ({
+  label,
+  options = [],
+  selectedValue,
+  onSelect,
+}) => {
+  const {styles} = useStyles();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleDropdown = () => setIsOpen(!isOpen);
+
+  const handleSelect = (value: any) => {
+    setIsOpen(false);
+    onSelect(value);
+  };
+
   return (
-    <ScrollView
-      horizontal
-      contentContainerStyle={{
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        marginBottom: sizes.HEIGHT * 0.02,
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-      }}
-      showsHorizontalScrollIndicator={false}>
-      <TouchableOpacity style={styles.button}>
-        <Text>Best Match</Text>
+    <View style={styles.wrapper}>
+      <TouchableOpacity style={styles.button} onPress={toggleDropdown}>
+        <View style={styles.buttonContent}>
+          <Text style={styles.label}>{selectedValue || label}</Text>
+          <Text style={styles.dropdownIcon}>{isOpen ? '▲' : '▼'}</Text>
+        </View>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button}>
-        <Text>Price: Low to High</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button}>
-        <Text>Service Type</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button}>
-        <Text>Location</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button}>
-        <Text>Price Range</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button}>
-        <Text>Rating</Text>
-      </TouchableOpacity>
-    </ScrollView>
+
+      {isOpen && (
+        <View style={styles.dropdown}>
+          {options.map((option, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.dropdownItem}
+              onPress={() => handleSelect(option)}>
+              <Text>{option}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
+    </View>
   );
 };
 
-const styles = StyleSheet.create({});
-
-export default FilterButtons;
+export default FilterDropdownButton;

@@ -10,6 +10,7 @@ import {
 import useStyles from './style';
 import icons from '../../../assets/icons';
 import CustomHeader from '../../../components/CustomHeader/CustomHeader';
+import {screen} from '../../../utils/constants';
 
 const AdminDashboardScreen = () => {
   const {styles} = useStyles();
@@ -77,7 +78,11 @@ const AdminDashboardScreen = () => {
           Monitor and manage platform activity
         </Text>
       </View>
-      <ScrollView style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={{
+          paddingBottom: screen.height * 0.1,
+        }}>
         <TouchableOpacity
           style={styles.analyticsButton}
           onPress={() => setShowAnalyticsModal(true)}>

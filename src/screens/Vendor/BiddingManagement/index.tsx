@@ -14,6 +14,7 @@ import useStyles from './style';
 import icons from '../../../assets/icons';
 import CustomHeader from '../../../components/CustomHeader/CustomHeader';
 import InputComponent from '../../../components/global/InputComponent';
+import {screen} from '../../../utils/constants';
 
 const BiddingManagementScreen = () => {
   const {styles} = useStyles();
@@ -144,19 +145,23 @@ const BiddingManagementScreen = () => {
   return (
     <>
       <CustomHeader showMenu />
+      <View style={styles.header}>
+        <Text style={styles.heading}>Bidding Management</Text>
+        <Text style={styles.subHeading}>Active Customer Requests</Text>
+        <Text style={styles.description}>
+          View requests and place your bids
+        </Text>
+      </View>
+
       <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+          paddingBottom: screen.height * 0.1,
+        }}
         style={styles.container}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
-        <View style={styles.header}>
-          <Text style={styles.heading}>Bidding Management</Text>
-          <Text style={styles.subHeading}>Active Customer Requests</Text>
-          <Text style={styles.description}>
-            View requests and place your bids
-          </Text>
-        </View>
-
         <TouchableOpacity
           style={styles.viewAllButton}
           onPress={handleViewAllBids}>

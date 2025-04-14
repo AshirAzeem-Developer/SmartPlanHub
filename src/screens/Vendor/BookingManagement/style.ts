@@ -11,7 +11,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       padding: sizes.WIDTH * 0.05,
-      backgroundColor: '#fff',
+      backgroundColor: '#f2f2f2',
     },
     heading: {
       color: '#fff',
