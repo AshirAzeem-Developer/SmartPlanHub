@@ -6,6 +6,7 @@ import {
   Image,
   StatusBar,
   Platform,
+  StyleProp,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
@@ -25,6 +26,7 @@ interface CustomHeaderProps {
   textColor?: string;
   barStyle?: 'light-content' | 'dark-content';
   translucent?: boolean;
+  titleStyles?: StyleProp<any>;
 }
 
 const CustomHeader: React.FC<CustomHeaderProps> = ({
@@ -37,6 +39,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
   textColor = '#fff',
   barStyle = 'light-content',
   translucent = false,
+  titleStyles,
 }) => {
   const navigation = useNavigation<DrawerNavigationProp<DrawerParamList>>();
 
@@ -79,9 +82,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
         )}
 
         {/* Title or Logo */}
-        {title && (
-          <Text style={[styles.title, {color: textColor}]}>{title}</Text>
-        )}
+        {title && <Text style={[styles.title, titleStyles]}>{title}</Text>}
 
         {/* Right Icon */}
         {showMenu ? (

@@ -21,6 +21,9 @@ import BookingManagementScreen from '../screens/Vendor/BookingManagement';
 import BiddingManagementScreen from '../screens/Vendor/BiddingManagement';
 import RatingsAndReviewsScreen from '../screens/Vendor/RatingsAndReviews';
 import AdminDashboardScreen from '../screens/Vendor/AdminDashboard';
+import Chat from '../screens/Vendor/Chatting';
+import ChatList from '../screens/Vendor/ChatList';
+import CustomHeader from '../components/CustomHeader/CustomHeader';
 
 const Stack = createNativeStackNavigator<AppStackParamsList>();
 const Drawer = createDrawerNavigator();
@@ -81,6 +84,36 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
     </>
   );
 }
+const MessageStack = createNativeStackNavigator();
+
+const MessagesStack = () => {
+  return (
+    <MessageStack.Navigator>
+      <MessageStack.Screen
+        name="ChatList"
+        component={ChatList}
+        options={{
+          header: () => <CustomHeader title="Messages" showMenu />,
+        }}
+      />
+      <MessageStack.Screen
+        name="Chat"
+        component={Chat}
+        options={({route}: any) => ({
+          header: () => (
+            <CustomHeader
+              showBackButton
+              titleStyles={{
+                textAlign: 'left',
+              }}
+              title={route.params?.userName || 'Chat'}
+            />
+          ),
+        })}
+      />
+    </MessageStack.Navigator>
+  );
+};
 function VendorStack() {
   return (
     <Drawer.Navigator
@@ -191,6 +224,22 @@ function VendorStack() {
         }}
         name="AdminDashboard"
         component={AdminDashboardScreen}
+      />
+      <Drawer.Screen
+        options={{
+          drawerIcon: () => (
+            <Image
+              source={icons.CHAT}
+              style={{
+                width: 24,
+                height: 24,
+              }}
+            />
+          ),
+          drawerLabel: 'Messages',
+        }}
+        name="Messages"
+        component={() => <MessagesStack />}
       />
     </Drawer.Navigator>
   );

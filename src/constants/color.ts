@@ -31,7 +31,7 @@ const colorsLight = {
   isDark: false,
   BACKGROUND: '#FFFFFF', // White background
   PRIMARY_BACKGROUND: '#F6F9FE', // Soft blue-gray background (if needed)
-  TEXT: '#000000', // Black text
+  TEXT: '#ffffff', // Black text
   LIGHT_GRAY: '#C1C7C2', // Light gray for borders, separators
   GRAY: 'grey',
 };

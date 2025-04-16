@@ -15,4 +15,6 @@ export type AppStackParamsList = {
 };
 export type DrawerParamList = {
   VendorHome: undefined;
+  ChatList: undefined;
+  Chat: {userId: string; userName: string; userAvatar: string};
 };

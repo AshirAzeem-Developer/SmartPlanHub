@@ -20,4 +20,5 @@ export default {
   PEOPLE: require('./people.png'),
   ANALYTICS: require('./analytics.png'),
   ADMIN: require('./administrator.png'),
+  CHAT: require('./chat.png'),
 };

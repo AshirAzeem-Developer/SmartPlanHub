@@ -27,6 +27,7 @@ const useStyles = () => {
       justifyContent: 'center',
     },
     title: {
+      color: colors.TEXT,
       fontSize: sizes.WIDTH * 0.05,
       fontWeight: 'bold',
       textAlign: 'center',
