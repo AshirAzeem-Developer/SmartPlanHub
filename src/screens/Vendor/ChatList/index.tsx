@@ -26,19 +26,19 @@ type ChatListItem = {
 const mockChatList: ChatListItem[] = [
   {
     id: '1',
-    name: 'Alice Johnson',
+    name: 'Ahmed Ali',
     avatar: 'https://i.pravatar.cc/150?img=1',
     lastMessage: 'See you tomorrow!',
   },
   {
     id: '2',
-    name: 'Bob Smith',
+    name: 'Muhammad Khan',
     avatar: 'https://i.pravatar.cc/150?img=2',
     lastMessage: 'Got the files, thanks!',
   },
   {
     id: '3',
-    name: 'Charlie Brown',
+    name: 'Hammad Raza',
     avatar: 'https://i.pravatar.cc/150?img=3',
     lastMessage: 'Are we still meeting?',
   },
