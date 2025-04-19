@@ -1,4 +1,5 @@
 export default {
-  BASE_URL: `https://xxx.xxx.xxx.com/api`,
-  LOGIN: `/xxx/xxx`,
+  BASE_URL: `http://192.168.18.80:3000/api/v1`,
+  LOGIN: `/users/login`,
+  SIGNUP: `/users/signup`,
 };

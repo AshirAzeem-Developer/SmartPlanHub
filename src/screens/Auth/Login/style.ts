@@ -111,7 +111,14 @@ const useStyles = () => {
       marginBottom: sizes.HEIGHT * 0.02,
     },
     createAccountText: {
-      ...globalStyles.TEXT_STYLE_BOLD,
+      ...globalStyles.TEXT_STYLE,
+      color: '#fff',
+      fontSize: sizes.WIDTH * 0.035,
+      marginLeft: sizes.WIDTH * 0.02,
+      fontWeight: 'bold',
+    },
+    signupText: {
+      ...globalStyles.TEXT_STYLE,
       color: colors.TEXT,
       fontSize: sizes.WIDTH * 0.035,
       marginLeft: sizes.WIDTH * 0.02,

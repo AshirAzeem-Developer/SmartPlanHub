@@ -6,14 +6,18 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
 import useStyles from './style';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import icons from '../../../assets/icons';
 import InputComponent from '../../../components/global/InputComponent';
-import {validateEmail} from '../../../utils/validator';
+import {validateEmail, validatePassword} from '../../../utils/validator';
 import {NavigationProp} from '@react-navigation/native';
 import CustomHeader from '../../../components/CustomHeader/CustomHeader';
+import api from '../../../utils/api';
+import apiEndPoints from '../../../constants/apiEndPoints';
 
 interface SignupProps {
   navigation: NavigationProp<any>;
@@ -27,20 +31,40 @@ const Signup: React.FC<SignupProps> = ({navigation}) => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   function handleCreateAccount() {
+    setIsLoading(true);
     if (!isChecked || !phoneNumber || !fullName || !email || !password) {
       return;
     }
     let data = {
-      role: selectedRole,
-      phoneNumber: phoneNumber,
-      fullName: fullName,
+      name: fullName,
       email: email,
       password: password,
+      phoneNum: phoneNumber,
+      role: selectedRole.toLowerCase() === 'user' ? 'user' : 'admin',
     };
 
-    navigation.navigate('Login');
+    // navigation.navigate('Login');
+
+    api
+      .post(apiEndPoints.SIGNUP, data)
+      .then(res => {
+        setIsLoading(false);
+        console.log('Response:', res.data);
+        if (res.data.status === 'success') {
+          navigation.navigate('Login');
+        } else {
+          Alert.alert(res.data.message);
+        }
+        console.log('Response:', res);
+      })
+      .catch(error => {
+        setIsLoading(false);
+        console.error('Error:', error.response.data.message);
+      });
+
     console.log('Register Data ->', JSON.stringify(data, null, 2));
   }
 
@@ -91,7 +115,7 @@ const Signup: React.FC<SignupProps> = ({navigation}) => {
             style={styles.input}
             placeholder="Enter your phone number"
             keyboardType="phone-pad"
-            maxLength={11}
+            maxLength={13}
           />
 
           <Text style={styles.label}>Full Name</Text>
@@ -124,6 +148,13 @@ const Signup: React.FC<SignupProps> = ({navigation}) => {
             style={styles.input}
             placeholder="Create password"
             secureTextEntry
+            errorHandler={[
+              {
+                errorText:
+                  'Password must be at least 8 characters long and contain at least one number Or special character',
+                validator: validatePassword,
+              },
+            ]}
           />
         </View>
 
@@ -152,10 +183,19 @@ const Signup: React.FC<SignupProps> = ({navigation}) => {
         <TouchableOpacity
           onPress={handleCreateAccount}
           disabled={
-            !isChecked || !phoneNumber || !fullName || !email || !password
+            !isChecked &&
+            !phoneNumber &&
+            !fullName &&
+            !email &&
+            !password &&
+            isLoading
           }
           style={[styles.createAccountButton, !isChecked && {opacity: 0.5}]}>
-          <Text style={styles.createAccountText}>Create Account</Text>
+          {isLoading ? (
+            <ActivityIndicator color={'#ffffff'} />
+          ) : (
+            <Text style={styles.createAccountText}>Create Account</Text>
+          )}
         </TouchableOpacity>
 
         {/* Forgot Password */}

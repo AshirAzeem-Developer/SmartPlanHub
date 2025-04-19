@@ -1,5 +1,11 @@
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import useStyles from './style';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import InputComponent from '../../../components/global/InputComponent';
@@ -7,7 +13,13 @@ import {validateEmail} from '../../../utils/validator';
 
 import {NavigationProp} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
-import {setIsLoggedIn, setUserType} from '../../../store/reducer/user';
+import {
+  setIsLoggedIn,
+  setToken,
+  setUserType,
+} from '../../../store/reducer/user';
+import api from '../../../utils/api';
+import apiEndPoints from '../../../constants/apiEndPoints';
 
 interface LoginProps {
   navigation: NavigationProp<any>;
@@ -16,6 +28,7 @@ interface LoginProps {
 const Login: React.FC<LoginProps> = ({navigation}) => {
   const {styles, sizes, colors} = useStyles();
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [selectedRole, setSelectedRole] = useState<'User' | 'Vendor'>('User');
   const [email, setEmail] = useState('');
@@ -32,19 +45,43 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
     setEmailError(isEmailValid ? '' : 'Invalid email format.');
     setPasswordError(!isPasswordValid);
 
-    if (isEmailValid && isPasswordValid && isChecked) {
-      console.log('Form Data:', {
+    // if (isEmailValid && isPasswordValid && isChecked) {
+    //   console.log('Form Data:', {
+    //     email: email,
+    //     password: password,
+    //     role: selectedRole.toLowerCase(),
+    //     termsAccepted: isChecked,
+    //   });
+    //   dispatch(setUserType(selectedRole.toLowerCase()));
+    //   dispatch(setIsLoggedIn(true));
+    //   // navigation.navigate('HomeScreen');
+    // } else {
+    //   console.log('Validation Failed. Please check your inputs.');
+    // }
+    setIsLoading(true);
+
+    api
+      .post(apiEndPoints.LOGIN, {
         email: email,
         password: password,
-        role: selectedRole.toLowerCase(),
-        termsAccepted: isChecked,
+      })
+      .then(res => {
+        console.log('Response:', res.data);
+        if (res.data.status === 'success') {
+          setIsLoading(false);
+          dispatch(setUserType(selectedRole.toLowerCase()));
+          dispatch(setIsLoggedIn(true));
+          dispatch(setToken(res.data.token));
+          navigation.navigate('HomeScreen');
+        } else {
+          setIsLoading(false);
+          Alert.alert(res.data.message);
+        }
+      })
+      .catch(error => {
+        setIsLoading(false);
+        console.error('Error:', error.response.data.message);
       });
-      dispatch(setUserType(selectedRole.toLowerCase()));
-      dispatch(setIsLoggedIn(true));
-      // navigation.navigate('HomeScreen');
-    } else {
-      console.log('Validation Failed. Please check your inputs.');
-    }
   };
 
   // Validate email while typing
@@ -66,7 +103,7 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
       <Text style={styles.title}>Login</Text>
 
       {/* User/Vendor Toggle */}
-      <View style={styles.toggleContainer}>
+      {/* <View style={styles.toggleContainer}>
         <TouchableOpacity
           style={[
             styles.toggleButton,
@@ -96,7 +133,7 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
             Vendor
           </Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
 
       {/* Email Input */}
       <Text style={styles.label}>Email Address</Text>
@@ -152,10 +189,17 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
 
       {/* Create Account Button */}
       <TouchableOpacity
+        onPress={validateInputs}
         disabled={!isChecked || !!emailError || passwordError}
-        style={[styles.createAccountButton, !isChecked && {opacity: 0.5}]}
-        onPress={validateInputs}>
-        <Text style={styles.buttonText}>Login</Text>
+        style={[
+          styles.createAccountButton,
+          (!isChecked || !!emailError || passwordError) && {opacity: 0.7},
+        ]}>
+        {!isLoading ? (
+          <Text style={styles.createAccountText}>Login</Text>
+        ) : (
+          <ActivityIndicator color="#fff" />
+        )}
       </TouchableOpacity>
       <View style={styles.createAccountContainer}>
         <Text
@@ -169,7 +213,7 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
           onPress={() => {
             navigation.navigate('Signup');
           }}>
-          <Text style={styles.createAccountText}>Signup </Text>
+          <Text style={styles.signupText}>Signup </Text>
         </TouchableOpacity>
       </View>
     </View>
