@@ -9,7 +9,7 @@ import {
 import useStyles from './style';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import InputComponent from '../../../components/global/InputComponent';
-import {validateEmail} from '../../../utils/validator';
+import {validateEmail, validatePassword} from '../../../utils/validator';
 
 import {NavigationProp} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
@@ -161,8 +161,9 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
         // icon={require('../../../assets/icons/lock.png')}
         errorHandler={[
           {
-            validator: (text: string) => text.length >= 6,
-            errorText: 'Password must be at least 6 characters long.',
+            validator: validatePassword,
+            errorText:
+              ' Password must be at least 8 characters long and contain at least one number Or special character ',
           },
         ]}
       />
