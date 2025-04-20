@@ -19,6 +19,8 @@ import icons from '../../../assets/icons';
 import {setIsLoggedIn} from '../../../store/reducer/user';
 import {useDispatch} from 'react-redux';
 import FilterDropdownButton from '../../../components/FilterButtons';
+import api from '../../../utils/api';
+import apiEndPoints from '../../../constants/apiEndPoints';
 
 const vendors = [
   {
@@ -79,12 +81,26 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
   const [selectedRating, setSelectedRating] = useState('');
   const {styles} = useStyles();
   const dispatch = useDispatch();
+
+  const handleLogout = async () => {
+    api
+      .get(apiEndPoints.LOGOUT)
+      .then(res => {
+        console.log('Logout Response:', res.data);
+        if (res.data.status === 'success') {
+          dispatch(setIsLoggedIn(false));
+        } else {
+          console.log('Logout Failed:', res.data.message);
+        }
+      })
+      .catch(error => {
+        console.log('Logout Error:', error);
+      });
+  };
+
   return (
     <>
-      <TouchableOpacity
-        onPress={() => {
-          dispatch(setIsLoggedIn(false));
-        }}>
+      <TouchableOpacity onPress={handleLogout}>
         <Image
           source={icons.LOGOUT}
           style={{
