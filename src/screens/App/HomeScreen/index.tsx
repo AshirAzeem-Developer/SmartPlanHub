@@ -21,6 +21,9 @@ import {useDispatch} from 'react-redux';
 import FilterDropdownButton from '../../../components/FilterButtons';
 import api from '../../../utils/api';
 import apiEndPoints from '../../../constants/apiEndPoints';
+import CustomBidCard from '../../../components/CustomBidCard';
+import GenericModal from '../../../components/Modal';
+import CustomRequestModal from '../../../components/CustomServiceRequest';
 
 const vendors = [
   {
@@ -79,6 +82,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
   const [selectedService, setSelectedService] = useState('');
   const [selectedPriceRange, setSelectedPriceRange] = useState('');
   const [selectedRating, setSelectedRating] = useState('');
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const {styles} = useStyles();
   const dispatch = useDispatch();
 
@@ -153,6 +157,15 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
           />
         </View>
         <Text style={styles.heading}>Welcome</Text>
+        <CustomBidCard
+          type="Custom Bid"
+          price="Negotiable"
+          delivery=""
+          isNegotiable={true}
+          onPress={() => {
+            setIsModalVisible(true);
+          }}
+        />
 
         <Text style={styles.subHeading}>Featured Vendors</Text>
         <FlatList
@@ -186,6 +199,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
           keyExtractor={item => item.id}
         />
       </ScrollView>
+      <GenericModal
+        visible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}>
+        <CustomRequestModal onClose={() => setIsModalVisible(false)} />
+      </GenericModal>
     </>
   );
 };
