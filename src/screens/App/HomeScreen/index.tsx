@@ -24,28 +24,28 @@ const vendors = [
   {
     id: '1',
     image: images.DUMMY_VENDOR,
-    name: 'John’s Home Renovations',
+    name: 'Ali Decor & Events',
     rating: 4.8,
     onPress: () => {},
   },
   {
     id: '2',
     image: images.DUMMY_VENDOR,
-    name: 'Evergreen Landscaping',
+    name: 'GreenLeaf Caterers',
     rating: 4.5,
     onPress: () => {},
   },
   {
     id: '3',
     image: images.DUMMY_VENDOR,
-    name: 'TechFix IT Solutions',
+    name: 'PakTech Solutions',
     rating: 4.7,
     onPress: () => {},
   },
   {
     id: '4',
     image: images.DUMMY_VENDOR,
-    name: 'Starlight Event Planners',
+    name: 'Noor Wedding Planners',
     rating: 4.3,
     onPress: () => {},
   },
@@ -54,15 +54,15 @@ const vendors = [
 const bookings = [
   {
     id: '1',
-    service: 'Interior Painting',
-    vendor: 'John’s Home Renovations',
+    service: 'Stage Decoration',
+    vendor: 'Ali Decor & Events',
     date: 'May 1, 2024',
     image: images.VENDOR,
   },
   {
     id: '2',
-    service: 'Garden Makeover',
-    vendor: 'Evergreen Landscaping',
+    service: 'Catering Services',
+    vendor: 'GreenLeaf Caterers',
     date: 'April 30, 2024',
     image: images.VENDOR,
   },
@@ -102,7 +102,13 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
           <FilterDropdownButton
             label="Service Type"
             selectedValue={selectedService}
-            options={['Plumbing', 'Cleaning', 'Electrician']}
+            options={[
+              'Birthday Party',
+              'Wedding',
+              'Corporate Event',
+              'Baby Shower',
+              'Anniversary',
+            ]}
             onSelect={value => setSelectedService(value)}
           />
           <FilterDropdownButton

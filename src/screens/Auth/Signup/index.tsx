@@ -43,7 +43,7 @@ const Signup: React.FC<SignupProps> = ({navigation}) => {
       email: email,
       password: password,
       phoneNum: phoneNumber,
-      role: selectedRole.toLowerCase() === 'user' ? 'user' : 'admin',
+      role: selectedRole.toLowerCase(),
     };
 
     // navigation.navigate('Login');
