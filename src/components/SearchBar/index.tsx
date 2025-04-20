@@ -6,6 +6,7 @@ const SearchBar = () => {
   return (
     <View style={styles.container}>
       <TextInput
+        placeholderTextColor={'#999'}
         placeholder="Search by service, location..."
         style={styles.input}
       />
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginTop: 15,
   },
-  input: {flex: 1, padding: 15},
+  input: {flex: 1, padding: 15, color: '#000'},
   icon: {
     marginLeft: 5,
     width: 20,
