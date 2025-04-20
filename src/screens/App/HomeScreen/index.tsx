@@ -159,7 +159,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
         <Text style={styles.heading}>Welcome</Text>
         <CustomBidCard
           type="Custom Bid"
-          price="Negotiable"
+          price="Start Bid"
           delivery=""
           isNegotiable={true}
           onPress={() => {
