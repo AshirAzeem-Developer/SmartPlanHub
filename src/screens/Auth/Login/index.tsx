@@ -103,7 +103,7 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
       <Text style={styles.title}>Login</Text>
 
       {/* User/Vendor Toggle */}
-      {/* <View style={styles.toggleContainer}>
+      <View style={styles.toggleContainer}>
         <TouchableOpacity
           style={[
             styles.toggleButton,
@@ -133,7 +133,7 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
             Vendor
           </Text>
         </TouchableOpacity>
-      </View> */}
+      </View>
 
       {/* Email Input */}
       <Text style={styles.label}>Email Address</Text>
@@ -190,7 +190,10 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
 
       {/* Create Account Button */}
       <TouchableOpacity
-        onPress={validateInputs}
+        onPress={() => {
+          dispatch(setUserType(selectedRole.toLowerCase()));
+          dispatch(setIsLoggedIn(true));
+        }}
         disabled={!isChecked || !!emailError || passwordError}
         style={[
           styles.createAccountButton,
