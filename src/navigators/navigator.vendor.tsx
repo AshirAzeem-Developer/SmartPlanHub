@@ -24,6 +24,8 @@ import AdminDashboardScreen from '../screens/Vendor/AdminDashboard';
 import Chat from '../screens/Vendor/Chatting';
 import ChatList from '../screens/Vendor/ChatList';
 import CustomHeader from '../components/CustomHeader/CustomHeader';
+import api from '../utils/api';
+import apiEndPoints from '../constants/apiEndPoints';
 
 const Stack = createNativeStackNavigator<AppStackParamsList>();
 const Drawer = createDrawerNavigator();
@@ -56,7 +58,19 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
   const dispatch = useDispatch();
 
   const handleLogout = async () => {
-    dispatch(setIsLoggedIn(false));
+    api
+      .get(apiEndPoints.LOGOUT)
+      .then(res => {
+        console.log('Logout Response:', res.data);
+        if (res.data.status === 'success') {
+          dispatch(setIsLoggedIn(false));
+        } else {
+          console.log('Logout Failed:', res.data.message);
+        }
+      })
+      .catch(error => {
+        console.log('Logout Error:', error);
+      });
   };
 
   return (
@@ -114,6 +128,7 @@ const MessagesStack = () => {
     </MessageStack.Navigator>
   );
 };
+
 function VendorStack() {
   return (
     <Drawer.Navigator

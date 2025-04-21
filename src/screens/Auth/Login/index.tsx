@@ -69,10 +69,10 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
         console.log('Response:', res.data);
         if (res.data.status === 'success') {
           setIsLoading(false);
-          dispatch(setUserType(selectedRole.toLowerCase()));
+          dispatch(setUserType(res?.data?.user?.role));
           dispatch(setIsLoggedIn(true));
-          dispatch(setToken(res.data.token));
-          navigation.navigate('HomeScreen');
+          dispatch(setToken(res?.data?.token));
+          console.log('This is the token', res?.data?.token);
         } else {
           setIsLoading(false);
           Alert.alert(res.data.message);
@@ -103,7 +103,7 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
       <Text style={styles.title}>Login</Text>
 
       {/* User/Vendor Toggle */}
-      <View style={styles.toggleContainer}>
+      {/* <View style={styles.toggleContainer}>
         <TouchableOpacity
           style={[
             styles.toggleButton,
@@ -133,7 +133,7 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
             Vendor
           </Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
 
       {/* Email Input */}
       <Text style={styles.label}>Email Address</Text>
@@ -190,10 +190,13 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
 
       {/* Create Account Button */}
       <TouchableOpacity
-        onPress={() => {
-          dispatch(setUserType(selectedRole.toLowerCase()));
-          dispatch(setIsLoggedIn(true));
-        }}
+        onPress={
+          // () => {
+          // dispatch(setUserType(selectedRole.toLowerCase()));
+          // dispatch(setIsLoggedIn(true));
+          // }
+          validateInputs
+        }
         disabled={!isChecked || !!emailError || passwordError}
         style={[
           styles.createAccountButton,

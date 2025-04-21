@@ -105,9 +105,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
   return (
     <>
       <TouchableOpacity
-        onPress={() => {
-          dispatch(setIsLoggedIn(false));
-        }}>
+        onPress={
+          // () => {
+          // dispatch(setIsLoggedIn(false));
+          // }
+          handleLogout
+        }>
         <Image
           source={icons.LOGOUT}
           style={{

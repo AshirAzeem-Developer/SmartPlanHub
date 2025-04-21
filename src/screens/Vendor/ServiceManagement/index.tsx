@@ -10,11 +10,14 @@ import {
   Image,
   Alert,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import CustomHeader from '../../../components/CustomHeader/CustomHeader';
 import {screen} from '../../../utils/constants';
 import useStyles from './style';
 import InputComponent from '../../../components/global/InputComponent';
+import api from '../../../utils/api';
+import apiEndPoints from '../../../constants/apiEndPoints';
 
 const dummyImages = [
   {uri: 'https://picsum.photos/200/300?random=1'},
@@ -29,6 +32,7 @@ const AddServiceModalView = ({
   serviceData,
   setServiceData,
   isEditing,
+  loading,
 }: any) => {
   const {styles} = useStyles();
   return (
@@ -70,9 +74,13 @@ const AddServiceModalView = ({
 
           <View style={styles.modalButtons}>
             <TouchableOpacity onPress={onSave} style={styles.saveBtn}>
-              <Text style={styles.saveText}>
-                {isEditing ? 'Update' : 'Save'}
-              </Text>
+              {loading ? (
+                <ActivityIndicator />
+              ) : (
+                <Text style={styles.saveText}>
+                  {isEditing ? 'Update' : 'Save'}
+                </Text>
+              )}
             </TouchableOpacity>
             <TouchableOpacity onPress={onClose} style={styles.cancelBtn}>
               <Text style={styles.cancelText}>Cancel</Text>
@@ -89,6 +97,7 @@ const ServiceManagementScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const [services, setServices] = useState([
     {
@@ -126,24 +135,51 @@ const ServiceManagementScreen = () => {
   };
 
   const handleSave = () => {
-    if (
-      serviceData.title &&
-      serviceData.rate &&
-      serviceData.description &&
-      serviceData.availability
-    ) {
-      if (isEditing && editingIndex !== null) {
-        const updated = [...services];
-        updated[editingIndex] = serviceData;
-        setServices(updated);
-      } else {
-        setServices([...services, serviceData]);
-      }
-      setModalVisible(false);
-      setServiceData({title: '', rate: '', description: '', availability: ''});
-      setEditingIndex(null);
-      setIsEditing(false);
-    }
+    setLoading(true);
+    console.log('This si the Data', serviceData);
+
+    api
+      .post(apiEndPoints.POST_NEW_SERVICE, serviceData)
+      .then(res => {
+        if (res.data.status !== 'success') {
+          setLoading(false);
+          Alert.alert('Error', 'Failed to add service. Please try again.');
+          return;
+        }
+        console.log('This si the Data', serviceData);
+        setLoading(false);
+        console.log('Service added successfully:', res.data);
+
+        if (
+          serviceData.title &&
+          serviceData.rate &&
+          serviceData.description &&
+          serviceData.availability
+        ) {
+          if (isEditing && editingIndex !== null) {
+            const updated = [...services];
+            updated[editingIndex] = serviceData;
+            setServices(updated);
+          } else {
+            setServices([...services, serviceData]);
+          }
+          setModalVisible(false);
+          setServiceData({
+            title: '',
+            rate: '',
+            description: '',
+            availability: '',
+          });
+          setEditingIndex(null);
+          setIsEditing(false);
+        }
+      })
+      .catch(err => {
+        setLoading(false);
+        console.error('Error adding service:', err.response.data);
+      });
+
+    // =============================
   };
 
   const handleDelete = (index: number) => {
@@ -230,6 +266,7 @@ const ServiceManagementScreen = () => {
           serviceData={serviceData}
           setServiceData={setServiceData}
           isEditing={isEditing}
+          loading={loading}
         />
       </ScrollView>
     </>
