@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   ScrollView,
@@ -21,22 +21,34 @@ import GenericModal from '../../../components/Modal';
 import CustomRequestModal from '../../../components/CustomServiceRequest';
 import ServiceReviewForm from '../../../components/Review';
 import FilterDropdownButton from '../../../components/FilterButtons';
-
+import api from '../../../utils/api';
+import apiEndPoints from '../../../constants/apiEndPoints';
+interface Bid {
+  _id: string;
+  requestDetails: string;
+  timeline: string;
+  preferredStartDate: string;
+  budgetRange: {
+    min: number;
+    max: number;
+  };
+  category: string;
+  filters: {
+    localVendorsOnly: boolean;
+    verifiedProvidersOnly: boolean;
+    minExperienceYears: number;
+  };
+}
 const AvailableBids = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isReviewModal, setIsReviewModal] = useState(false);
-  const [selectedService, setSelectedService] = React.useState<string | null>(
+  const [selectedService, setSelectedService] = useState<string | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
+  const [selectedPriceRange, setSelectedPriceRange] = useState<string | null>(
     null,
   );
-  const [selectedLocation, setSelectedLocation] = React.useState<string | null>(
-    null,
-  );
-  const [selectedPriceRange, setSelectedPriceRange] = React.useState<
-    string | null
-  >(null);
-  const [selectedRating, setSelectedRating] = React.useState<string | null>(
-    null,
-  );
+  const [selectedRating, setSelectedRating] = useState<string | null>(null);
+  const [bids, setBids] = useState<Bid[]>([]);
   const [onSubmit, setOnSubmit] = useState();
 
   const portfolios = [
@@ -48,37 +60,7 @@ const AvailableBids = () => {
     },
     {id: '2', image: images.DUMMY_VENDOR, name: 'Vendor Name', rating: 4},
   ];
-  const bids = [
-    {
-      id: '1',
-      type: 'Express Bid',
-      price: '$89',
-      delivery: '24hrs',
-      onPress: () => {},
-    },
-    {
-      id: '2',
-      type: 'Standard Bid',
-      price: '$149',
-      delivery: '48hrs',
-      onPress: () => {},
-    },
-    {
-      id: '3',
-      type: 'Premium Bid',
-      price: '$249',
-      delivery: '72hrs',
-      onPress: () => {},
-    },
-    {
-      id: '4',
-      type: 'Custom Bid',
-      price: 'Negotiable',
-      delivery: '',
-      isNegotiable: true,
-      onPress: () => setIsModalVisible(true),
-    },
-  ];
+
   const reviewsData = [
     {
       id: 1,
@@ -95,6 +77,74 @@ const AvailableBids = () => {
       image: images.VENDOR,
     },
   ];
+
+  function getAllBids() {
+    api
+      .get(apiEndPoints.GET_ALL_BIDS)
+      .then(response => {
+        if (response.data.status !== 'success') {
+          console.error('Error fetching bids:', response.data);
+          return;
+        }
+        console.log('Bids fetched successfully:', response.data.data.bids);
+        setBids(response.data.data.bids);
+      })
+      .catch(error => {
+        console.error('Error fetching bids:', error);
+      });
+  }
+  const filteredBids = bids.filter(bid => {
+    // Service Type Filter
+    if (selectedService && bid.category !== selectedService) return false;
+
+    // Location Filter — currently mocked, you can enhance this when backend provides location
+    if (selectedLocation) {
+      const mockLocationMap: {[key: string]: string[]} = {
+        Karachi: ['Event Photography', 'Cleaning'],
+        Lahore: ['Birthday Party Planning'],
+        Islamabad: ['Wedding Decor', 'Stage Decoration'],
+      };
+      const allowedCategories = mockLocationMap[selectedLocation] || [];
+      if (!allowedCategories.includes(bid.category)) return false;
+    }
+
+    // Price Range Filter
+    if (selectedPriceRange) {
+      const cleaned = selectedPriceRange.replace(/[₨,]/g, '');
+      const [minStr, maxStr] = cleaned.includes('+')
+        ? [cleaned.replace('+', ''), 'Infinity']
+        : cleaned.split(' - ');
+
+      const min = parseInt(minStr);
+      const max = maxStr === 'Infinity' ? Infinity : parseInt(maxStr);
+
+      const bidMin = bid.budgetRange.min;
+      const bidMax = bid.budgetRange.max;
+
+      if (bidMax < min || bidMin > max) return false;
+    }
+
+    // Rating Filter — mock logic until API supports actual ratings
+    if (selectedRating) {
+      const mockRatingMap: {[key: string]: number} = {
+        'Event Photography': 5,
+        'Birthday Party Planning': 4,
+        'Wedding Decor': 3,
+        'Stage Decoration': 2,
+        General: 1,
+      };
+      const requiredRating = parseInt(selectedRating[0]);
+      const bidRating = mockRatingMap[bid.category] || 1;
+      if (bidRating < requiredRating) return false;
+    }
+
+    return true;
+  });
+  const categories = Array.from(new Set(bids.map(b => b.category)));
+
+  useEffect(() => {
+    getAllBids();
+  }, []);
   return (
     <>
       <ScrollView style={{flex: 1, backgroundColor: '#f5f5f5', padding: 10}}>
@@ -103,32 +153,36 @@ const AvailableBids = () => {
           <FilterDropdownButton
             label="Service Type"
             selectedValue={selectedService}
-            options={['Plumbing', 'Cleaning', 'Electrician']}
+            options={categories}
             onSelect={value => setSelectedService(value)}
+            onClear={() => setSelectedService(null)}
           />
           <FilterDropdownButton
             label="Location"
             selectedValue={selectedLocation}
             options={['Karachi', 'Lahore', 'Islamabad']}
             onSelect={value => setSelectedLocation(value)}
+            onClear={() => setSelectedLocation(null)}
           />
           <FilterDropdownButton
             label="Price Range"
             selectedValue={selectedPriceRange}
             options={[
-              '$0 - $50',
-              '$51 - $100',
-              '$101 - $200',
-              '$201 - $500',
-              '$501+',
+              '₨0 - ₨1000',
+              '₨1001 - ₨2000',
+              '₨2001 - ₨3000',
+              '₨3001 - ₨5000',
+              '₨5001+',
             ]}
             onSelect={value => setSelectedPriceRange(value)}
+            onClear={() => setSelectedPriceRange(null)}
           />
           <FilterDropdownButton
             label="Rating"
             selectedValue={selectedRating}
             options={['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars']}
             onSelect={value => setSelectedRating(value)}
+            onClear={() => setSelectedRating(null)}
           />
         </View>
         <Text
@@ -141,16 +195,33 @@ const AvailableBids = () => {
           Available Bids
         </Text>
 
+        {filteredBids.length === 0 && (
+          <Text style={{textAlign: 'center', marginTop: 20}}>
+            No bids match the selected filters.
+          </Text>
+        )}
+
         <View style={{padding: 10}}>
           <View>
-            <Text
+            {/* <Text
               style={{fontSize: 20, fontWeight: 'bold', marginVertical: 10}}>
               Current Bids
-            </Text>
+            </Text> */}
             <FlatList
-              data={bids}
-              keyExtractor={item => item.id}
-              renderItem={({item}) => <BidCard bid={item} />}
+              data={filteredBids}
+              keyExtractor={item => item._id}
+              renderItem={({item}) => (
+                <BidCard
+                  bid={{
+                    ...item,
+                    isNegotiable: item.budgetRange.max > 3000, // Example logic
+                    onPress: () => {
+                      console.log('Bid selected:', item._id);
+                      // Optionally navigate, open modal, etc.
+                    },
+                  }}
+                />
+              )}
             />
           </View>
           <View>

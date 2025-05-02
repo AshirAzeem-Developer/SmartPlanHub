@@ -8,10 +8,14 @@ import {
   ScrollView,
   Platform,
   Pressable,
+  ActivityIndicator,
 } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import useStyles from './style';
+import api from '../../utils/api';
+import apiEndPoints from '../../constants/apiEndPoints';
+import {useSelector} from 'react-redux';
 
 interface Props {
   onClose: () => void;
@@ -30,21 +34,62 @@ const CustomServiceForm: React.FC<Props> = ({onClose}) => {
     verified: false,
     experience: false,
   });
+  const [minBudget, setMinBudget] = useState('');
+  const [maxBudget, setMaxBudget] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const userToken = useSelector((state: any) => state?.user?.token);
+  console.log('This is the user token', userToken);
+  const isFormValid = () => {
+    return (
+      description.trim() !== '' &&
+      startDate !== undefined &&
+      minBudget.trim() !== '' &&
+      maxBudget.trim() !== '' &&
+      !isNaN(Number(minBudget)) &&
+      !isNaN(Number(maxBudget)) &&
+      Number(minBudget) > 0 &&
+      Number(maxBudget) >= Number(minBudget)
+    );
+  };
 
   const handleSubmit = () => {
+    setIsLoading(true);
     const data = {
-      description,
+      requestDetails: description,
       timeline,
-      startDate: startDate?.toISOString() ?? null,
-      budgetRange,
-      customBudget,
-      preferences,
+      preferredStartDate: startDate?.toISOString().split('T')[0] ?? null,
+      budgetRange: {
+        min: Number(minBudget),
+        max: Number(maxBudget),
+      },
+      filters: {
+        localVendorsOnly: preferences.localOnly,
+        verifiedProvidersOnly: preferences.verified,
+        minExperienceYears: preferences.experience ? 5 : 0,
+      },
     };
 
-    console.log('Form Submitted:', data);
-
-    // You can pass data to backend here
-    onClose();
+    api
+      .post(apiEndPoints.POST_BID, data, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userToken}`,
+        },
+      })
+      .then(response => {
+        setIsLoading(false);
+        if (response.data.status !== 'success') {
+          console.error('Error submitting request:', response.data);
+          return;
+        }
+        console.log('Request submitted successfully:', response.data);
+        onClose();
+      })
+      .catch(error => {
+        setIsLoading(false);
+        console.error('Error submitting request:', error);
+      });
   };
 
   const togglePreference = (key: keyof typeof preferences) => {
@@ -57,6 +102,7 @@ const CustomServiceForm: React.FC<Props> = ({onClose}) => {
       <Text style={styles.subTitle}>Request Details</Text>
 
       {/* Project Details */}
+      <Text style={styles.label}>Project Details</Text>
       <TextInput
         style={styles.inputBox}
         multiline
@@ -69,7 +115,10 @@ const CustomServiceForm: React.FC<Props> = ({onClose}) => {
       {/* Timeline */}
       <Text style={styles.label}>Timeline</Text>
       <View style={styles.picker}>
-        <Picker selectedValue={timeline} onValueChange={setTimeline}>
+        <Picker
+          selectedValue={timeline}
+          onValueChange={setTimeline}
+          style={{color: '#000'}}>
           <Picker.Item label="Urgent (24h)" value="Urgent (24h)" />
           <Picker.Item label="Within 3 days" value="3 days" />
           <Picker.Item label="Within a week" value="1 week" />
@@ -96,23 +145,26 @@ const CustomServiceForm: React.FC<Props> = ({onClose}) => {
       )}
 
       {/* Budget Range */}
-      <Text style={styles.label}>Budget Range</Text>
-      <View style={styles.picker}>
-        <Picker selectedValue={budgetRange} onValueChange={setBudgetRange}>
-          <Picker.Item label="Under $100" value="Under $100" />
-          <Picker.Item label="$100 - $500" value="$100 - $500" />
-          <Picker.Item label="$500+" value="$500+" />
-        </Picker>
-      </View>
+      <Text style={styles.label}>Budget Range (in PKR)</Text>
 
-      {/* Custom Budget */}
-      <TextInput
-        style={styles.inputBox}
-        placeholder="Custom budget (optional)"
-        keyboardType="numeric"
-        value={customBudget}
-        onChangeText={setCustomBudget}
-      />
+      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <TextInput
+          style={[styles.inputBox, {width: '48%'}]}
+          placeholderTextColor={'#888'}
+          placeholder="Min (₨)"
+          keyboardType="numeric"
+          value={minBudget}
+          onChangeText={setMinBudget}
+        />
+        <TextInput
+          style={[styles.inputBox, {width: '48%'}]}
+          placeholder="Max (₨)"
+          keyboardType="numeric"
+          placeholderTextColor={'#888'}
+          value={maxBudget}
+          onChangeText={setMaxBudget}
+        />
+      </View>
 
       {/* Additional Preferences */}
       <Text style={styles.label}>Additional Preferences</Text>
@@ -139,8 +191,15 @@ const CustomServiceForm: React.FC<Props> = ({onClose}) => {
       ))}
 
       {/* Submit Button */}
-      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-        <Text style={styles.submitText}>Submit Request</Text>
+      <TouchableOpacity
+        style={[styles.submitButton, !isFormValid() && {opacity: 0.6}]}
+        onPress={handleSubmit}
+        disabled={!isFormValid() || isLoading}>
+        {!isLoading ? (
+          <Text style={styles.submitText}>Submit Request</Text>
+        ) : (
+          <ActivityIndicator color="#fff" />
+        )}
       </TouchableOpacity>
 
       {/* Cancel */}

@@ -39,6 +39,7 @@ const useStyles = () => {
       borderRadius: 10,
       marginBottom: 12,
       overflow: 'hidden',
+      color: '#000',
     },
     datePicker: {
       borderWidth: 1,

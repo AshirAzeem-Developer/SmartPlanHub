@@ -65,11 +65,11 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
         email: email,
         password: password,
       })
-      .then(res => {
+      .then((res: any) => {
         console.log('Response:', res.data);
-        if (res.data.status === 'success') {
+        if (res?.data?.status === 'success') {
           setIsLoading(false);
-          dispatch(setUserType(res?.data?.user?.role));
+          dispatch(setUserType(res?.data?.data?.user?.role));
           dispatch(setIsLoggedIn(true));
           dispatch(setToken(res?.data?.token));
           console.log('This is the token', res?.data?.token);

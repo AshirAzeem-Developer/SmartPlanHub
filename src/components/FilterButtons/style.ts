@@ -52,6 +52,19 @@ const useStyles = () => {
       paddingVertical: 10,
       paddingHorizontal: 16,
     },
+  
+    clearBtn: {
+      marginHorizontal: 4,
+      paddingHorizontal: 6,
+      paddingVertical: 2,
+      backgroundColor: '#eee',
+      borderRadius: 10,
+    },
+    clearText: {
+      fontSize: 12,
+      color: '#444',
+    },
+    
   });
   return {
     colors,
