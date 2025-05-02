@@ -117,7 +117,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
             width: 24,
             height: 24,
             marginLeft: screen.width * 0.05,
-            marginTop: screen.height * 0.03,
+            marginTop: screen.height * 0.04,
             tintColor: '#000',
           }}
         />
