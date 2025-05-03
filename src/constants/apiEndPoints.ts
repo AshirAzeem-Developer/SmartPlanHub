@@ -12,4 +12,6 @@ export default {
   POST_NEW_SERVICE: `/services`,
   GET_VENDOR_ALL_SERVICES: `/services`,
   DELETE_SERVICE_BY_ID: (id: any) => `/services/${id}`,
+  GET_VENDOR_SERVICE_BY_ID: (id: any) => `/services/${id}`,
+  GET_SERVICE_BY_ID: (id: any) => `/services/${id}`,
 };

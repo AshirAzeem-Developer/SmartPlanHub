@@ -3,10 +3,8 @@ import {
   View,
   Text,
   TouchableOpacity,
-  StyleSheet,
   ScrollView,
   Modal,
-  TextInput,
   Image,
   Alert,
   FlatList,
@@ -22,11 +20,37 @@ import api from '../../../utils/api';
 import apiEndPoints from '../../../constants/apiEndPoints';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Picker} from '@react-native-picker/picker';
+
+interface Availability {
+  day: string;
+  startTime: string;
+  endTime: string;
+}
+
+interface Service {
+  _id?: string;
+  title: string;
+  rate: string | number;
+  description: string;
+  availability: Availability[];
+}
+
+interface ModalProps {
+  visible: boolean;
+  onClose: () => void;
+  onSave: () => void;
+  serviceData: Service;
+  setServiceData: React.Dispatch<React.SetStateAction<Service>>;
+  isEditing: boolean;
+  loading: boolean;
+}
+
 const dummyImages = [
   {uri: 'https://picsum.photos/200/300?random=1'},
   {uri: 'https://picsum.photos/200/300?random=2'},
   {uri: 'https://picsum.photos/200/300?random=3'},
 ];
+
 const VALID_DAYS = [
   'Monday',
   'Tuesday',
@@ -35,7 +59,8 @@ const VALID_DAYS = [
   'Friday',
   'Monday-Friday',
 ];
-const AddServiceModalView = ({
+
+const AddServiceModalView: React.FC<ModalProps> = ({
   visible,
   onClose,
   onSave,
@@ -43,13 +68,18 @@ const AddServiceModalView = ({
   setServiceData,
   isEditing,
   loading,
-}: any) => {
+}) => {
   const {styles} = useStyles();
-
   const [showStartTime, setShowStartTime] = useState(false);
   const [showEndTime, setShowEndTime] = useState(false);
 
-  const onStartTimeChange = (event: any, selectedTime: any) => {
+  const availability = serviceData.availability?.[0] || {
+    day: '',
+    startTime: '',
+    endTime: '',
+  };
+
+  const onStartTimeChange = (_: any, selectedTime?: Date) => {
     if (Platform.OS === 'android') setShowStartTime(false);
     if (selectedTime) {
       const time = selectedTime.toLocaleTimeString([], {
@@ -57,14 +87,21 @@ const AddServiceModalView = ({
         minute: '2-digit',
         hour12: false,
       });
+
+      const availability = serviceData.availability?.[0] || {
+        day: '',
+        startTime: '',
+        endTime: '',
+      };
+
       setServiceData({
         ...serviceData,
-        availability: [{...serviceData.availability[0], startTime: time}],
+        availability: [{...availability, startTime: time}],
       });
     }
   };
 
-  const onEndTimeChange = (event: any, selectedTime: any) => {
+  const onEndTimeChange = (_: any, selectedTime?: Date) => {
     if (Platform.OS === 'android') setShowEndTime(false);
     if (selectedTime) {
       const time = selectedTime.toLocaleTimeString([], {
@@ -72,9 +109,16 @@ const AddServiceModalView = ({
         minute: '2-digit',
         hour12: false,
       });
+
+      const availability = serviceData.availability?.[0] || {
+        day: '',
+        startTime: '',
+        endTime: '',
+      };
+
       setServiceData({
         ...serviceData,
-        availability: [{...serviceData.availability[0], endTime: time}],
+        availability: [{...availability, endTime: time}],
       });
     }
   };
@@ -111,11 +155,19 @@ const AddServiceModalView = ({
 
           <View style={styles.input}>
             <Picker
-              selectedValue={serviceData.availability[0].day}
+              selectedValue={serviceData?.availability?.[0]?.day || ''}
               onValueChange={value =>
                 setServiceData({
                   ...serviceData,
-                  availability: [{...serviceData.availability[0], day: value}],
+                  availability: [
+                    {
+                      ...(serviceData.availability?.[0] || {
+                        startTime: '',
+                        endTime: '',
+                      }),
+                      day: value,
+                    },
+                  ],
                 })
               }>
               <Picker.Item label="Select Day(s)" value="" />
@@ -133,9 +185,11 @@ const AddServiceModalView = ({
             onPress={() => setShowStartTime(true)}>
             <Text
               style={{
-                color: serviceData.availability[0].startTime ? '#000' : '#999',
+                color: serviceData?.availability?.[0]?.startTime
+                  ? '#000'
+                  : '#999',
               }}>
-              {serviceData.availability[0].startTime
+              {serviceData?.availability?.[0]?.startTime
                 ? `Start Time: ${serviceData.availability[0].startTime}`
                 : 'Select Start Time'}
             </Text>
@@ -144,7 +198,7 @@ const AddServiceModalView = ({
             <DateTimePicker
               value={new Date()}
               mode="time"
-              is24Hour={true}
+              is24Hour
               display="default"
               onChange={onStartTimeChange}
             />
@@ -158,9 +212,11 @@ const AddServiceModalView = ({
             onPress={() => setShowEndTime(true)}>
             <Text
               style={{
-                color: serviceData.availability[0].endTime ? '#000' : '#999',
+                color: serviceData?.availability?.[0]?.startTime
+                  ? '#000'
+                  : '#999',
               }}>
-              {serviceData.availability[0].endTime
+              {serviceData?.availability?.[0]?.endTime
                 ? `End Time: ${serviceData.availability[0].endTime}`
                 : 'Select End Time'}
             </Text>
@@ -169,7 +225,7 @@ const AddServiceModalView = ({
             <DateTimePicker
               value={new Date()}
               mode="time"
-              is24Hour={true}
+              is24Hour
               display="default"
               onChange={onEndTimeChange}
             />
@@ -195,27 +251,19 @@ const AddServiceModalView = ({
   );
 };
 
-const ServiceManagementScreen = () => {
+const ServiceManagementScreen: React.FC = () => {
   const {styles} = useStyles();
   const [modalVisible, setModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-
-  const [services, setServices] = useState<any[]>([]);
-
-  const [serviceData, setServiceData] = useState({
+  const [services, setServices] = useState<Service[]>([]);
+  const [serviceData, setServiceData] = useState<Service>({
     title: '',
     rate: '',
     description: '',
-    availability: [
-      {
-        day: '',
-        startTime: '',
-        endTime: '',
-      },
-    ],
+    availability: [{day: '', startTime: '', endTime: ''}],
   });
 
   const openAddModal = () => {
@@ -230,8 +278,18 @@ const ServiceManagementScreen = () => {
   };
 
   const openEditModal = (index: number) => {
+    const selectedService = services[index];
+    const availability = selectedService.availability?.[0] || {
+      day: '',
+      startTime: '',
+      endTime: '',
+    };
+
     setEditingIndex(index);
-    setServiceData(services[index]);
+    setServiceData({
+      ...selectedService,
+      availability: [availability], // ensure always valid array
+    });
     setIsEditing(true);
     setModalVisible(true);
   };
@@ -239,21 +297,27 @@ const ServiceManagementScreen = () => {
   const handleSave = () => {
     setLoading(true);
 
-    const payload = {
-      title: serviceData.title.trim(),
+    const trimmedTitle = serviceData.title.trim();
+
+    const avail = serviceData.availability?.[0] || {
+      day: '',
+      startTime: '',
+      endTime: '',
+    };
+
+    const payload: any = {
       rate: Number(serviceData.rate),
       description: serviceData.description.trim(),
       availability: [
         {
-          day: serviceData.availability[0].day.trim(),
-          startTime: serviceData.availability[0].startTime,
-          endTime: serviceData.availability[0].endTime,
+          day: avail.day.trim(),
+          startTime: avail.startTime,
+          endTime: avail.endTime,
         },
       ],
     };
 
     if (
-      !payload.title ||
       !payload.rate ||
       !payload.description ||
       !payload.availability[0].day ||
@@ -268,21 +332,55 @@ const ServiceManagementScreen = () => {
       return;
     }
 
-    api
-      .post(apiEndPoints.POST_NEW_SERVICE, payload)
+    if (!isEditing || serviceData.title !== services[editingIndex!]?.title) {
+      payload.title = trimmedTitle;
+    }
+
+    const request = isEditing
+      ? api.put(
+          apiEndPoints.GET_VENDOR_SERVICE_BY_ID(serviceData._id!),
+          payload,
+        )
+      : api.post(apiEndPoints.POST_NEW_SERVICE, {
+          ...payload,
+          title: trimmedTitle,
+        });
+
+    request
       .then(res => {
         setLoading(false);
-        if (!res.data) {
-          Alert.alert('Error', 'Failed to add service. Please try again.');
+
+        const service = res?.data?.service;
+
+        if (!service) {
+          // Just close modal and refresh everything
+          setModalVisible(false);
+          GetVendorAllServices(); // fetch updated services from backend
+          setServiceData({
+            title: '',
+            rate: '',
+            description: '',
+            availability: [{day: '', startTime: '', endTime: ''}],
+          });
+          setEditingIndex(null);
+          setIsEditing(false);
           return;
         }
 
+        // Otherwise use updated service from response
+        const safeService = {
+          ...service,
+          availability: Array.isArray(service.availability)
+            ? service.availability
+            : [{day: '', startTime: '', endTime: ''}],
+        };
+
         if (isEditing && editingIndex !== null) {
           const updated = [...services];
-          updated[editingIndex] = payload;
+          updated[editingIndex] = {...safeService, _id: serviceData?._id};
           setServices(updated);
         } else {
-          setServices([...services, payload]);
+          setServices([...services, safeService]);
         }
 
         setModalVisible(false);
@@ -318,7 +416,6 @@ const ServiceManagementScreen = () => {
             api
               .delete(apiEndPoints.DELETE_SERVICE_BY_ID(id))
               .then(res => {
-                console.log('Delete Response:', res.data);
                 if (res.data) {
                   const updated = services.filter(
                     service => service._id !== id,
@@ -350,9 +447,8 @@ const ServiceManagementScreen = () => {
       .get(apiEndPoints.GET_VENDOR_ALL_SERVICES)
       .then(res => {
         setRefreshing(false);
-        console.log('GetVendorAllServices Response:', res.data);
         if (res.data) {
-          setServices(res?.data?.services);
+          setServices(res.data.services);
         } else {
           console.error('Error fetching services:', res.data.message);
         }
@@ -398,22 +494,22 @@ const ServiceManagementScreen = () => {
             <View key={index} style={styles.serviceCard}>
               <Text style={styles.serviceTitle}>
                 {service.title}{' '}
-                <Text style={styles.serviceRate}>{`$${service.rate}`}</Text>
+                <Text style={styles.serviceRate}>{`Rs ${service.rate}`}</Text>
               </Text>
               <Text style={styles.serviceDescription}>
                 {service.description}
               </Text>
               <Text style={styles.serviceAvailability}>
-                Available: {service.availability[0]?.day} |{' '}
-                {service.availability[0]?.startTime} -{' '}
-                {service.availability[0]?.endTime}
+                {service.availability && service.availability.length > 0
+                  ? `Available: ${service.availability[0].day} | ${service.availability[0].startTime} - ${service.availability[0].endTime}`
+                  : 'Availability: Not set'}
               </Text>
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <TouchableOpacity onPress={() => openEditModal(index)}>
                   <Text style={styles.editText}>Edit</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleDelete(service?._id)}>
+                <TouchableOpacity onPress={() => handleDelete(service._id!)}>
                   <Text style={styles.deleteText}>Delete</Text>
                 </TouchableOpacity>
               </View>
@@ -429,13 +525,13 @@ const ServiceManagementScreen = () => {
           columnWrapperStyle={styles.flatListRow}
           contentContainerStyle={styles.flatListContainer}
           renderItem={({item}: any) =>
-            'isAdd' in item && item.isAdd ? (
+            item?.isAdd ? (
               <TouchableOpacity style={styles.portfolioBox}>
                 <Text style={styles.plusText}>+</Text>
               </TouchableOpacity>
-            ) : (
+            ) : item?.uri ? (
               <Image source={{uri: item.uri}} style={styles.portfolioImage} />
-            )
+            ) : null
           }
         />
 

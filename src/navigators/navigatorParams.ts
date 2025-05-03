@@ -17,4 +17,10 @@ export type DrawerParamList = {
   VendorHome: undefined;
   ChatList: undefined;
   Chat: {userId: string; userName: string; userAvatar: string};
+  ChatScreen: {
+    userId: string;
+    receiverId: string;
+    token: string;
+    userName?: string;
+  };
 };

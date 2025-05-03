@@ -1,8 +1,11 @@
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {
+  createNativeStackNavigator,
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack';
 import CreateBottomTabs from './CreateBottomTabs';
 import VendorHome from '../screens/Vendor/VendorHome';
 import icons from '../assets/icons';
-import {AppStackParamsList} from './navigatorParams';
+import {AppStackParamsList, DrawerParamList} from './navigatorParams';
 import Settings from '../screens/Vendor/Settings';
 import {
   createDrawerNavigator,
@@ -26,6 +29,8 @@ import ChatList from '../screens/Vendor/ChatList';
 import CustomHeader from '../components/CustomHeader/CustomHeader';
 import api from '../utils/api';
 import apiEndPoints from '../constants/apiEndPoints';
+import ChatScreen from '../screens/Vendor/ChatScreen';
+import MessagedUsersScreen from '../screens/Vendor/MessagedUserScreen';
 
 const Stack = createNativeStackNavigator<AppStackParamsList>();
 const Drawer = createDrawerNavigator();
@@ -120,6 +125,33 @@ const MessagesStack = () => {
               titleStyles={{
                 textAlign: 'left',
               }}
+              title={route.params?.userName || 'Chat'}
+            />
+          ),
+        })}
+      />
+    </MessageStack.Navigator>
+  );
+};
+type ChatScreenProps = NativeStackScreenProps<DrawerParamList, 'ChatScreen'>;
+const ChatStack = () => {
+  return (
+    <MessageStack.Navigator>
+      <MessageStack.Screen
+        name="MessagedUserScreen"
+        component={MessagedUsersScreen}
+        options={{
+          header: () => <CustomHeader title="Messages" showMenu />,
+        }}
+      />
+      <MessageStack.Screen
+        name="ChatScreen"
+        component={ChatScreen as any} // ✅ now typed correctly
+        options={({route}: any) => ({
+          header: () => (
+            <CustomHeader
+              showBackButton
+              titleStyles={{textAlign: 'left'}}
               title={route.params?.userName || 'Chat'}
             />
           ),
@@ -254,7 +286,7 @@ function VendorStack() {
           drawerLabel: 'Messages',
         }}
         name="Messages"
-        component={() => <MessagesStack />}
+        component={() => <ChatStack />}
       />
     </Drawer.Navigator>
   );
