@@ -20,6 +20,8 @@ import api from '../../../utils/api';
 import apiEndPoints from '../../../constants/apiEndPoints';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Picker} from '@react-native-picker/picker';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {useSelector} from 'react-redux';
 
 interface Availability {
   day: string;
@@ -59,6 +61,7 @@ const VALID_DAYS = [
   'Friday',
   'Monday-Friday',
 ];
+const BASE_URL = 'http://192.168.18.80:3000';
 
 const AddServiceModalView: React.FC<ModalProps> = ({
   visible,
@@ -265,6 +268,7 @@ const ServiceManagementScreen: React.FC = () => {
     description: '',
     availability: [{day: '', startTime: '', endTime: ''}],
   });
+  const [portfolioImages, setPortfolioImages] = useState<{uri: string}[]>([]);
 
   const openAddModal = () => {
     setServiceData({
@@ -462,9 +466,84 @@ const ServiceManagementScreen: React.FC = () => {
         );
       });
   }, []);
+  const handleImageUpload = async () => {
+    const result = await launchImageLibrary({
+      mediaType: 'photo',
+      quality: 0.8,
+    });
+
+    if (result.didCancel) return;
+    const photo = result.assets?.[0];
+
+    if (!photo?.uri) {
+      Alert.alert('Error', 'Image not selected properly.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('photo', {
+      uri:
+        Platform.OS === 'android'
+          ? photo.uri
+          : photo.uri.replace('file://', ''),
+      type: photo.type || 'image/jpeg',
+      name: photo.fileName || 'photo.jpg',
+    });
+
+    try {
+      const res = await api.post(
+        apiEndPoints.POST_NEW_SERVICE_IMAGE,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
+      console.log('Response:', res.data);
+      if (res.data && res.data.url) {
+        Alert.alert('Success', 'Image uploaded successfully!');
+        // You can also push it to the dummyImages array or fetch updated gallery
+      } else {
+        Alert.alert('Upload Failed', 'No image URL returned.');
+      }
+    } catch (err: any) {
+      console.error('Upload error:', err?.response?.data || err?.message);
+      Alert.alert(
+        'Error',
+        err?.response?.data?.message || 'Something went wrong while uploading.',
+      );
+    }
+  };
+  const userToken = useSelector((state: any) => state?.user?.token);
+
+  const fetchPortfolioImages = async () => {
+    try {
+      const res = await api.get(apiEndPoints.GET_ALL_SERVICE_IMAGES, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userToken}`,
+        },
+      });
+
+      if (res.data && Array.isArray(res.data)) {
+        const images = res.data.map((item: any) => ({
+          uri: `${BASE_URL}${item.url}`, // correct image URL
+        }));
+        setPortfolioImages(images);
+      }
+    } catch (err: any) {
+      console.error(
+        'Error fetching portfolio images:',
+        err?.response?.data || err?.message,
+      );
+      Alert.alert('Error', 'Failed to load gallery images.');
+    }
+  };
 
   useEffect(() => {
     GetVendorAllServices();
+    fetchPortfolioImages();
   }, [GetVendorAllServices]);
 
   return (
@@ -519,18 +598,25 @@ const ServiceManagementScreen: React.FC = () => {
 
         <Text style={styles.portfolioHeading}>Portfolio</Text>
         <FlatList
-          data={[{isAdd: true}, ...dummyImages]}
+          data={[{isAdd: true}, ...portfolioImages]}
           numColumns={2}
           keyExtractor={(_, index) => index.toString()}
           columnWrapperStyle={styles.flatListRow}
           contentContainerStyle={styles.flatListContainer}
           renderItem={({item}: any) =>
             item?.isAdd ? (
-              <TouchableOpacity style={styles.portfolioBox}>
+              <TouchableOpacity
+                style={styles.portfolioBox}
+                onPress={handleImageUpload}>
                 <Text style={styles.plusText}>+</Text>
               </TouchableOpacity>
             ) : item?.uri ? (
-              <Image source={{uri: item.uri}} style={styles.portfolioImage} />
+              <Image
+                source={{
+                  uri: item.uri,
+                }}
+                style={styles.portfolioImage}
+              />
             ) : null
           }
         />

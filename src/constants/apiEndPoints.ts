@@ -14,4 +14,7 @@ export default {
   DELETE_SERVICE_BY_ID: (id: any) => `/services/${id}`,
   GET_VENDOR_SERVICE_BY_ID: (id: any) => `/services/${id}`,
   GET_SERVICE_BY_ID: (id: any) => `/services/${id}`,
+  POST_NEW_SERVICE_IMAGE: `/gallery/post-img`,
+  GET_ALL_SERVICE_IMAGES: `/gallery/get-img`,
+  DELETE_SERVICE_IMAGE: (id: any) => `/gallery/get-img/${id}`,
 };

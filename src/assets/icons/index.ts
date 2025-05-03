@@ -21,4 +21,5 @@ export default {
   ANALYTICS: require('./analytics.png'),
   ADMIN: require('./administrator.png'),
   CHAT: require('./chat.png'),
+  TRASH: require('./bin.png'),
 };

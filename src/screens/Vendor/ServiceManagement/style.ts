@@ -154,6 +154,26 @@ const useStyles = () => {
       justifyContent: 'space-between',
       marginBottom: sizes.HEIGHT * 0.015,
     },
+    portfolioImageContainer: {
+      position: 'relative',
+      margin: 5,
+    },
+    trashIconWrapper: {
+      position: 'absolute',
+      top: 5,
+      right: 5,
+      backgroundColor: 'red',
+      borderRadius: 20,
+      width: 30,
+      height: 30,
+      alignItems: 'center',
+      justifyContent: 'center',
+      elevation: 3, // optional shadow for Android
+      shadowColor: '#000',
+      shadowOffset: {width: 0, height: 2},
+      shadowOpacity: 0.3,
+      shadowRadius: 3,
+    },
   });
 
   return {
