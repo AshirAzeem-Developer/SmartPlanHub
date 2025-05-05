@@ -1,7 +1,7 @@
 import {useColorScheme} from 'react-native';
 
 const defaultColors = {
-  PRIMARY: '#0000FF', // Black (Primary color for buttons, toggles, text)
+  PRIMARY: '#000000', // Black (Primary color for buttons, toggles, text)
   PRIMARY_TEXT: '#FFFFFF', // White (Text on primary backgrounds)
   SKY_BLUE: '#3db6fc', // Not used in current UI but kept for future use
   RED: '#ff1605', // Error messages, alerts

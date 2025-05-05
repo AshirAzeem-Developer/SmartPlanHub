@@ -110,6 +110,43 @@ const useStyles = () => {
       fontSize: sizes.WIDTH * 0.03,
       color: '#999',
     },
+    overallRatingCard: {
+      backgroundColor: '#fff',
+      borderRadius: 12,
+      padding: 16,
+      marginVertical: 10,
+      alignItems: 'center',
+      shadowColor: '#000',
+      shadowOpacity: 0.05,
+      shadowOffset: {width: 0, height: 2},
+      shadowRadius: 5,
+      elevation: 2,
+    },
+
+    overallRatingLabel: {
+      fontSize: sizes.WIDTH * 0.045,
+      fontWeight: 'bold',
+      marginBottom: 6,
+    },
+
+    overallRatingRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 4,
+    },
+
+    overallRatingValue: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      marginLeft: 8,
+      color: '#FFD700',
+    },
+
+    overallRatingCount: {
+      fontSize: 12,
+      color: '#777',
+    },
   });
 
   return {

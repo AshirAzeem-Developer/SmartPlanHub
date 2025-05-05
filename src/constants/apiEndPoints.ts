@@ -17,4 +17,7 @@ export default {
   POST_NEW_SERVICE_IMAGE: `/gallery/post-img`,
   GET_ALL_SERVICE_IMAGES: `/gallery/get-img`,
   DELETE_SERVICE_IMAGE: (id: any) => `/gallery/get-img/${id}`,
+  GET_ALL_REVIEWS_OF_VENDOR: (vendorId: any) => `/reviews/vendor/${vendorId}`,
+  GET_AVERAGE_RATING_OF_VENDOR: (vendorId: any) =>
+    `/reviews/averageRating/${vendorId}`,
 };

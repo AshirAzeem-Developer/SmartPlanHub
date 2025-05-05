@@ -4,6 +4,7 @@ const initialState = {
   userType: null,
   isLoggedIn: false,
   token: null,
+  userId: null,
 };
 
 export type UserType = typeof initialState.userType;
@@ -22,15 +23,20 @@ const user = createSlice({
     setToken(state, action) {
       state.token = action.payload;
     },
+    setUserId(state, action) {
+      state.userId = action.payload;
+    },
   },
 });
 
 export const {setUserType} = user.actions;
 export const {setIsLoggedIn} = user.actions;
 export const {setToken} = user.actions;
+export const {setUserId} = user.actions;
 export default user.reducer;
 
 export const selectUserType = (state: any) => state.user.userType as UserType;
 export const selectIsLoggedIn = (state: any) =>
   state.user.isLoggedIn as boolean;
 export const selectToken = (state: any) => state.user.token as string | null;
+export const selectUserId = (state: any) => state.user.userId as string | null;

@@ -256,7 +256,7 @@ function VendorStack() {
         name="RatingsAndReviewManagement"
         component={RatingsAndReviewsScreen}
       />
-      <Drawer.Screen
+      {/* <Drawer.Screen
         options={{
           drawerIcon: () => (
             <Image
@@ -271,7 +271,7 @@ function VendorStack() {
         }}
         name="AdminDashboard"
         component={AdminDashboardScreen}
-      />
+      /> */}
       <Drawer.Screen
         options={{
           drawerIcon: () => (

@@ -16,6 +16,7 @@ import {useDispatch} from 'react-redux';
 import {
   setIsLoggedIn,
   setToken,
+  setUserId,
   setUserType,
 } from '../../../store/reducer/user';
 import api from '../../../utils/api';
@@ -72,6 +73,7 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
           dispatch(setUserType(res?.data?.data?.user?.role));
           dispatch(setIsLoggedIn(true));
           dispatch(setToken(res?.data?.token));
+          dispatch(setUserId(res?.data?.data?.user?._id));
           console.log('This is the token', res?.data?.token);
         } else {
           setIsLoading(false);
