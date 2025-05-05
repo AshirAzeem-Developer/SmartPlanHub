@@ -8,9 +8,16 @@ import {
   StyleSheet,
 } from 'react-native';
 import axios from 'axios';
+import {useSelector} from 'react-redux';
+import {selectToken, selectUserId} from '../../../store/reducer/user';
 
 export default function MessagedUsersScreen({navigation, route}: any) {
-  const {userId, token} = route.params;
+  const userId = useSelector(selectUserId);
+  const token = useSelector(selectToken);
+
+  console.log('This is the token', token);
+  console.log('This is the userId', userId);
+
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
