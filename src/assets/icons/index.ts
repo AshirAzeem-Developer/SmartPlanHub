@@ -22,4 +22,5 @@ export default {
   ADMIN: require('./administrator.png'),
   CHAT: require('./chat.png'),
   TRASH: require('./bin.png'),
+  SEND: require('./send.png'),
 };

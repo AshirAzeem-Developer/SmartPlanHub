@@ -141,21 +141,15 @@ const ChatStack = () => {
         name="MessagedUserScreen"
         component={MessagedUsersScreen}
         options={{
-          header: () => <CustomHeader title="Messages" showMenu />,
+          headerShown: false,
         }}
       />
       <MessageStack.Screen
         name="ChatScreen"
         component={ChatScreen as any} // ✅ now typed correctly
-        options={({route}: any) => ({
-          header: () => (
-            <CustomHeader
-              showBackButton
-              titleStyles={{textAlign: 'left'}}
-              title={route.params?.userName || 'Chat'}
-            />
-          ),
-        })}
+        options={{
+          headerShown: false,
+        }}
       />
     </MessageStack.Navigator>
   );

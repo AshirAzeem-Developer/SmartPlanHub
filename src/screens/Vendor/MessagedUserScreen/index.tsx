@@ -10,6 +10,8 @@ import {
 import axios from 'axios';
 import {useSelector} from 'react-redux';
 import {selectToken, selectUserId} from '../../../store/reducer/user';
+import api from '../../../utils/api';
+import CustomHeader from '../../../components/CustomHeader/CustomHeader';
 
 export default function MessagedUsersScreen({navigation, route}: any) {
   const userId = useSelector(selectUserId);
@@ -22,11 +24,14 @@ export default function MessagedUsersScreen({navigation, route}: any) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get('http://192.168.18.80:3000/api/chat/messaged-users', {
-        headers: {Authorization: `Bearer ${token}`},
+    api
+      .get('http://192.168.18.80:3000/api/v1/chat/messaged-users', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       })
       .then(res => {
+        console.log('Response from messaged users:', res.data.users);
         setUsers(res.data.users);
         setLoading(false);
       })
@@ -44,6 +49,7 @@ export default function MessagedUsersScreen({navigation, route}: any) {
           userId,
           receiverId: item._id,
           token,
+          receiverName: item.name || item.email,
         })
       }>
       <Text style={styles.userName}>{item.name || item.email}</Text>
@@ -54,14 +60,17 @@ export default function MessagedUsersScreen({navigation, route}: any) {
     return <ActivityIndicator size="large" style={{marginTop: 50}} />;
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={users}
-        keyExtractor={(item: any) => item._id}
-        renderItem={renderItem}
-        ListEmptyComponent={<Text>No messaged users yet.</Text>}
-      />
-    </View>
+    <>
+      <CustomHeader showMenu barStyle="dark-content" />
+      <View style={styles.container}>
+        <FlatList
+          data={users}
+          keyExtractor={(item: any) => item._id}
+          renderItem={renderItem}
+          ListEmptyComponent={<Text>No messaged users yet.</Text>}
+        />
+      </View>
+    </>
   );
 }
 
