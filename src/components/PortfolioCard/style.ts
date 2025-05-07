@@ -29,6 +29,7 @@ const useStyles = () => {
     image: {
       width: sizes.WIDTH * 0.35,
       height: sizes.HEIGHT * 0.2,
+      borderRadius: sizes.WIDTH * 0.03,
     },
   });
   return {

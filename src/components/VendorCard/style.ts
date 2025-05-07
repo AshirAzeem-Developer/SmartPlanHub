@@ -34,7 +34,7 @@ const useStyles = () => {
       top: sizes.HEIGHT * 0.018,
       right: sizes.WIDTH * 0.08,
       flexDirection: 'row',
-      backgroundColor: 'rgba(0,0,0,0.2)',
+      backgroundColor: 'rgba(0,0,0,0.4)',
       padding: 5,
       borderRadius: 5,
       fontSize: sizes.WIDTH * 0.035,

@@ -54,27 +54,44 @@ const AvailableBids = () => {
   const portfolios = [
     {
       id: '1',
-      image: images.DUMMY_VENDOR,
-      name: 'John’s Professional Services',
+      image: images.KHAN_PHOTOGRAPHY_PORTFOLIO_IMAGE,
+      name: 'Khan’s Photography & Events',
       rating: 5,
     },
-    {id: '2', image: images.DUMMY_VENDOR, name: 'Vendor Name', rating: 4},
+    {
+      id: '2',
+      image: images.LAHORE_WEDDING_PLANNERS_PORTFOLIO_IMAGE,
+      name: 'Lahore Wedding Planners',
+      rating: 4,
+    },
+    {
+      id: '3',
+      image: images.KARACHI_MOMENTS_PORTFOLIO_IMAGE,
+      name: 'Karachi Moments Studio',
+      rating: 4,
+    },
+    {
+      id: '4',
+      image: images.ISLAMABAD_EVENT_EXPERTS_PORTFOLIO_IMAGE,
+      name: 'Islamabad Event Experts',
+      rating: 4,
+    },
   ];
 
   const reviewsData = [
     {
       id: 1,
-      reviewer: 'Sarah Johnson',
+      reviewer: 'Areeba Sajid',
       date: 'May 1, 2024',
       review: 'Amazing service! Very professional.',
-      image: images.VENDOR,
+      image: images.AREEBA_REVIEWS,
     },
     {
       id: 2,
-      reviewer: 'Michael Smith',
+      reviewer: 'Mustafa Khan',
       date: 'April 30, 2024',
       review: 'Excellent work, highly recommend!',
-      image: images.VENDOR,
+      image: images.JAVED_REVIEWS,
     },
   ];
 

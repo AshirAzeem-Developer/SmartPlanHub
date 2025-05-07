@@ -28,28 +28,28 @@ import CustomRequestModal from '../../../components/CustomServiceRequest';
 const vendors = [
   {
     id: '1',
-    image: images.DUMMY_VENDOR,
+    image: images.Ali_Decor,
     name: 'Ali Decor & Events',
     rating: 4.8,
     onPress: () => {},
   },
   {
     id: '2',
-    image: images.DUMMY_VENDOR,
+    image: images.GreenLeaf,
     name: 'GreenLeaf Caterers',
     rating: 4.5,
     onPress: () => {},
   },
   {
     id: '3',
-    image: images.DUMMY_VENDOR,
+    image: images.PakTech,
     name: 'PakTech Solutions',
     rating: 4.7,
     onPress: () => {},
   },
   {
     id: '4',
-    image: images.DUMMY_VENDOR,
+    image: images.Noor,
     name: 'Noor Wedding Planners',
     rating: 4.3,
     onPress: () => {},
@@ -62,14 +62,14 @@ const bookings = [
     service: 'Stage Decoration',
     vendor: 'Ali Decor & Events',
     date: 'May 1, 2024',
-    image: images.VENDOR,
+    image: images.Ali_Decor,
   },
   {
     id: '2',
     service: 'Catering Services',
     vendor: 'GreenLeaf Caterers',
     date: 'April 30, 2024',
-    image: images.VENDOR,
+    image: images.GreenLeaf,
   },
 ];
 
@@ -147,11 +147,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
             label="Price Range"
             selectedValue={selectedPriceRange}
             options={[
-              '$0 - $50',
-              '$51 - $100',
-              '$101 - $200',
-              '$201 - $500',
-              '$501+',
+              '₨0 - ₨1000',
+              '₨1001 - ₨2000',
+              '₨2001 - ₨3000',
+              '₨3001 - ₨5000',
+              '₨5001+',
             ]}
             onSelect={value => setSelectedPriceRange(value)}
           />

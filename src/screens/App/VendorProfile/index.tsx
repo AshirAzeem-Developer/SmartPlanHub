@@ -48,25 +48,25 @@ const VendorProfileScreen: React.FC<VendorProfileScreenProps> = ({
   const portfolioData = [
     {
       id: 1,
-      image: images.VENDOR,
+      image: images.KHAN_PHOTOGRAPHY_PORTFOLIO_IMAGE,
       name: "Khan's Photography & Events",
       rating: 5,
     },
     {
       id: 2,
-      image: images.VENDOR,
+      image: images.LAHORE_WEDDING_PLANNERS_PORTFOLIO_IMAGE,
       name: 'Lahore Wedding Planners',
       rating: 4,
     },
     {
       id: 3,
-      image: images.VENDOR,
+      image: images.KARACHI_MOMENTS_PORTFOLIO_IMAGE,
       name: 'Karachi Moments Studio',
       rating: 4,
     },
     {
       id: 4,
-      image: images.VENDOR,
+      image: images.ISLAMABAD_EVENT_EXPERTS_PORTFOLIO_IMAGE,
       name: 'Islamabad Event Experts',
       rating: 4,
     },
@@ -78,14 +78,14 @@ const VendorProfileScreen: React.FC<VendorProfileScreenProps> = ({
       reviewer: 'Areeba Siddiqui',
       date: 'April 1, 2025',
       review: 'Bohat zabardast service thi! Highly recommended.',
-      image: images.VENDOR,
+      image: images.AREEBA_REVIEWS,
     },
     {
       id: 2,
       reviewer: 'Usman Javed',
       date: 'March 28, 2025',
       review: 'Time pe kaam deliver kia, great experience!',
-      image: images.VENDOR,
+      image: images.JAVED_REVIEWS,
     },
   ];
 
@@ -109,11 +109,11 @@ const VendorProfileScreen: React.FC<VendorProfileScreenProps> = ({
           label="Price Range"
           selectedValue={selectedPriceRange}
           options={[
-            '$0 - $50',
-            '$51 - $100',
-            '$101 - $200',
-            '$201 - $500',
-            '$501+',
+            '₨0 - ₨1000',
+            '₨1001 - ₨2000',
+            '₨2001 - ₨3000',
+            '₨3001 - ₨5000',
+            '₨5001+',
           ]}
           onSelect={value => setSelectedPriceRange(value)}
         />
