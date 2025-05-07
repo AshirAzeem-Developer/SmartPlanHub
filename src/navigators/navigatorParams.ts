@@ -12,6 +12,12 @@ export type AppStackParamsList = {
   AvailableBids: undefined;
   HomeScreen: undefined;
   VendorProfile: undefined;
+  ChatScreen: {
+    userId: string;
+    receiverId: string;
+    token: string;
+    userName?: string;
+  };
 };
 export type DrawerParamList = {
   VendorHome: undefined;

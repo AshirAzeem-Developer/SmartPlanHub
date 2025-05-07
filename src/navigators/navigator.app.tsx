@@ -7,6 +7,7 @@ import AvailableBids from '../screens/App/AvailableBids';
 import Settings from '../screens/App/Settings';
 import HomeScreen from '../screens/App/HomeScreen';
 import VendorProfileScreen from '../screens/App/VendorProfile';
+import ChatScreen from '../screens/Vendor/ChatScreen';
 
 const Stack = createNativeStackNavigator<AppStackParamsList>();
 
@@ -140,6 +141,7 @@ function AppStack() {
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="AvailableBids" component={AvailableBids} />
       <Stack.Screen name="VendorProfile" component={VendorProfileScreen} />
+      <Stack.Screen name="ChatScreen" component={ChatScreen} />
     </Stack.Navigator>
   );
 }

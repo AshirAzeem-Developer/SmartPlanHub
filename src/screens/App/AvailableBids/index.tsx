@@ -23,6 +23,8 @@ import ServiceReviewForm from '../../../components/Review';
 import FilterDropdownButton from '../../../components/FilterButtons';
 import api from '../../../utils/api';
 import apiEndPoints from '../../../constants/apiEndPoints';
+import {useSelector} from 'react-redux';
+import {selectToken, selectUserId} from '../../../store/reducer/user';
 interface Bid {
   _id: string;
   requestDetails: string;
@@ -39,7 +41,7 @@ interface Bid {
     minExperienceYears: number;
   };
 }
-const AvailableBids = () => {
+const AvailableBids = ({navigation}: any) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isReviewModal, setIsReviewModal] = useState(false);
   const [selectedService, setSelectedService] = useState<string | null>(null);
@@ -50,6 +52,8 @@ const AvailableBids = () => {
   const [selectedRating, setSelectedRating] = useState<string | null>(null);
   const [bids, setBids] = useState<Bid[]>([]);
   const [onSubmit, setOnSubmit] = useState();
+  const token = useSelector(selectToken);
+  const userId = useSelector(selectUserId);
 
   const portfolios = [
     {
@@ -233,8 +237,14 @@ const AvailableBids = () => {
                     ...item,
                     isNegotiable: item.budgetRange.max > 3000, // Example logic
                     onPress: () => {
-                      console.log('Bid selected:', item._id);
+                      console.log('Bid selected:', item);
                       // Optionally navigate, open modal, etc.
+                      navigation.navigate('ChatScreen', {
+                        userId: userId,
+                        receiverId: item?.assignedTo as any,
+                        token: token,
+                        userName: item?.assignedTo as any,
+                      });
                     },
                   }}
                 />
