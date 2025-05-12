@@ -123,7 +123,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
         />
       </TouchableOpacity>
       <ScrollView style={styles.container}>
-        <SearchBar />
+        {/* <SearchBar /> */}
         <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 10}}>
           <FilterDropdownButton
             label="Service Type"

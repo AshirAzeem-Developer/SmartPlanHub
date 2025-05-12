@@ -3,7 +3,11 @@ import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import useStyles from './style';
 import {screen} from '../../utils/constants';
 
-const VendorProfile = () => {
+type VendorProfileProps = {
+  onPress?: () => void;
+};
+
+const VendorProfile: React.FC<VendorProfileProps> = ({onPress}) => {
   const {styles} = useStyles();
   return (
     <View
@@ -24,11 +28,8 @@ const VendorProfile = () => {
         </Text>
       </View>
       <View style={{width: screen.width * 0.3}}>
-        <TouchableOpacity style={styles.contactButton}>
+        <TouchableOpacity style={styles.contactButton} onPress={onPress}>
           <Text style={styles.buttonText}>Contact Vendor</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.requestButton}>
-          <Text style={styles.buttonText}>Request Quote</Text>
         </TouchableOpacity>
       </View>
     </View>

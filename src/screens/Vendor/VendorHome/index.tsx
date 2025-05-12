@@ -51,7 +51,7 @@ const VendorHome = ({navigation}: any) => {
           </View>
         </View>
 
-        <Text style={styles.quickActionsTitle}>Quick Actions</Text>
+        {/* <Text style={styles.quickActionsTitle}>Quick Actions</Text>
 
         <View style={styles.quickActionsContainer}>
           <TouchableOpacity style={styles.actionButton}>
@@ -106,7 +106,7 @@ const VendorHome = ({navigation}: any) => {
             />
             <Text style={styles.actionText}>Notifications</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </ScrollView>
     </>
   );

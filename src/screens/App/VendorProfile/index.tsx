@@ -91,7 +91,7 @@ const VendorProfileScreen: React.FC<VendorProfileScreenProps> = ({
 
   return (
     <ScrollView style={{padding: 20}}>
-      <SearchBar />
+      {/* <SearchBar />
       <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 10}}>
         <FilterDropdownButton
           label="Service Type"
@@ -123,13 +123,13 @@ const VendorProfileScreen: React.FC<VendorProfileScreenProps> = ({
           options={['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars']}
           onSelect={value => setSelectedRating(value)}
         />
-      </View>
+      </View> */}
       <View
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
-          marginTop: 20,
+          marginTop: screen.height * 0.05,
         }}>
         <Text style={{fontSize: 22, fontWeight: 'bold', marginVertical: 10}}>
           Vendor Profile
