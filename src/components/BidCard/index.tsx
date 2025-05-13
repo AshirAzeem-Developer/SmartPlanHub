@@ -50,11 +50,11 @@ const BidCard: React.FC<BidCardProps> = ({bid}) => {
 
       {/* Action Buttons */}
       <View style={styles.buttonGroup}>
-        {!bid.isNegotiable && (
+        {/* {!bid.isNegotiable && (
           <TouchableOpacity style={styles.acceptButton} onPress={bid.onPress}>
             <Text style={styles.buttonText}>Accept</Text>
           </TouchableOpacity>
-        )}
+        )} */}
 
         {bid.isNegotiable ? (
           <TouchableOpacity style={styles.discussButton} onPress={bid.onPress}>
