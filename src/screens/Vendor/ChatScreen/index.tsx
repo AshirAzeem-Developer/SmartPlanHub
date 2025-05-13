@@ -47,6 +47,7 @@ export default function ChatScreen({route, navigation}: ChatScreenProps) {
   const [receiverName, setReceiverName] = useState(
     route.params.receiverName as any,
   );
+  console.log('thisis the receiver name', receiverName);
 
   useEffect(() => {
     // Fetch receiver info
@@ -56,6 +57,7 @@ export default function ChatScreen({route, navigation}: ChatScreenProps) {
       })
       .then(res => {
         setReceiverName(res.data.user.name || res.data.user.email);
+        console.log('Response from receiver info:', res);
       });
 
     socket.emit('register_user', userId);

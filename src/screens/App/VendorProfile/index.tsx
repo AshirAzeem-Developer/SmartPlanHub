@@ -34,6 +34,12 @@ const VendorProfileScreen: React.FC<VendorProfileScreenProps> = ({
     .routes.find(route => route.name === 'VendorProfile')?.params || {
     vendorId: null,
   };
+  const {vendorName} = navigation
+    .getState()
+    .routes.find(route => route.name === 'VendorProfile')?.params || {
+    vendorName: null,
+  };
+  console.log('Vendor Name:', vendorName);
   console.log('Vendor ID:', vendorId);
 
   const userToken = useSelector(selectToken);
@@ -178,7 +184,7 @@ const VendorProfileScreen: React.FC<VendorProfileScreenProps> = ({
             userId: userId,
             receiverId: vendorId,
             token: userToken,
-            userName: 'User Name',
+            userName: vendorName,
           })
         }
       />

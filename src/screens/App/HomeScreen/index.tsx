@@ -83,6 +83,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
     try {
       const response = await api.get(apiEndPoints.GET_ALL_VENDOR_SERVICES);
       setFeaturedVendors(response.data.services || []);
+      console.log('This is the featured vendors', response.data.services);
     } catch (error) {
       console.error('Error fetching featured vendors:', error);
     } finally {
@@ -188,7 +189,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
           renderItem={({item}: any) => (
             <VendorCard
               onPress={() =>
-                navigation.navigate('VendorProfile', {vendorId: item.vendor})
+                navigation.navigate('VendorProfile', {
+                  vendorId: item.vendor,
+                  vendorName: item.title,
+                })
               }
               image={
                 images[item?.title?.replace(/\s+/g, '_')] || images.defaultImage
