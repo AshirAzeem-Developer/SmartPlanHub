@@ -35,6 +35,14 @@ const socket = io('http://192.168.18.80:3000', {
 
 export default function ChatScreen({route, navigation}: ChatScreenProps) {
   const {userId, receiverId, token} = route.params;
+
+  console.log(
+    'User ID from route params:',
+    userId,
+    'Receiver ID from route params:',
+    receiverId,
+  );
+
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [receiverName, setReceiverName] = useState(
     route.params.receiverName as any,

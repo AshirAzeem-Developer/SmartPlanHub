@@ -39,6 +39,8 @@ const VendorProfileScreen: React.FC<VendorProfileScreenProps> = ({
   const userToken = useSelector(selectToken);
   const userId = useSelector(selectUserId);
 
+  console.log('This is the USer id', userId);
+
   const [selectedService, setSelectedService] = React.useState<string | null>(
     null,
   );
@@ -173,10 +175,10 @@ const VendorProfileScreen: React.FC<VendorProfileScreenProps> = ({
       <VendorProfile
         onPress={() =>
           navigation.navigate('ChatScreen', {
-            recieverId: vendorId,
+            userId: userId,
+            receiverId: vendorId,
             token: userToken,
             userName: 'User Name',
-            userId: userId,
           })
         }
       />
