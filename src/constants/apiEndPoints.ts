@@ -7,6 +7,7 @@ export default {
   // ============== >> USER << ===============
   POST_BID: `/bid`,
   GET_ALL_BIDS: `/bid`,
+  GET_ALL_VENDOR_SERVICES: `/services/public`,
 
   // =============== >> VENDOR << ===============
   POST_NEW_SERVICE: `/services`,

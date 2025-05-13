@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   ScrollView,
@@ -8,109 +8,120 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
+import {NavigationProp} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
+import {setIsLoggedIn} from '../../../store/reducer/user';
 import SearchBar from '../../../components/SearchBar';
 import VendorCard from '../../../components/VendorCard';
 import BookingCard from '../../../components/BookingCard';
-import images from '../../../assets/images';
-import {screen} from '../../../utils/constants';
-import useStyles from './style';
-import {NavigationProp} from '@react-navigation/native';
-import icons from '../../../assets/icons';
-import {setIsLoggedIn} from '../../../store/reducer/user';
-import {useDispatch} from 'react-redux';
 import FilterDropdownButton from '../../../components/FilterButtons';
-import api from '../../../utils/api';
-import apiEndPoints from '../../../constants/apiEndPoints';
 import CustomBidCard from '../../../components/CustomBidCard';
 import GenericModal from '../../../components/Modal';
 import CustomRequestModal from '../../../components/CustomServiceRequest';
+import api from '../../../utils/api';
+import apiEndPoints from '../../../constants/apiEndPoints';
+import images from '../../../assets/images';
+import icons from '../../../assets/icons';
+import {screen} from '../../../utils/constants';
+import useStyles from './style';
 
-const vendors = [
-  {
-    id: '1',
-    image: images.Ali_Decor,
-    name: 'Ali Decor & Events',
-    rating: 4.8,
-    onPress: () => {},
-  },
-  {
-    id: '2',
-    image: images.GreenLeaf,
-    name: 'GreenLeaf Caterers',
-    rating: 4.5,
-    onPress: () => {},
-  },
-  {
-    id: '3',
-    image: images.PakTech,
-    name: 'PakTech Solutions',
-    rating: 4.7,
-    onPress: () => {},
-  },
-  {
-    id: '4',
-    image: images.Noor,
-    name: 'Noor Wedding Planners',
-    rating: 4.3,
-    onPress: () => {},
-  },
-];
+interface Vendor {
+  _id: string;
+  vendor: string;
+  title: string;
+  rate: number;
+  description: string;
+  availability: {
+    day: string;
+    startTime: string;
+    endTime: string;
+    _id: string;
+  }[];
+  createdAt: string;
+  updatedAt: string;
+}
 
-const bookings = [
-  {
-    id: '1',
-    service: 'Stage Decoration',
-    vendor: 'Ali Decor & Events',
-    date: 'May 1, 2024',
-    image: images.Ali_Decor,
-  },
-  {
-    id: '2',
-    service: 'Catering Services',
-    vendor: 'GreenLeaf Caterers',
-    date: 'April 30, 2024',
-    image: images.GreenLeaf,
-  },
-];
+interface Booking {
+  id: string;
+  service: string;
+  vendor: string;
+  date: string;
+  image: any;
+}
 
 interface HomeScreenProps {
   navigation: NavigationProp<any>;
 }
 
 const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
-  const [selectedLocation, setSelectedLocation] = useState('');
-  const [selectedService, setSelectedService] = useState('');
-  const [selectedPriceRange, setSelectedPriceRange] = useState('');
-  const [selectedRating, setSelectedRating] = useState('');
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState<string>('');
+  const [selectedService, setSelectedService] = useState<string>('');
+  const [selectedPriceRange, setSelectedPriceRange] = useState<string>('');
+  const [selectedRating, setSelectedRating] = useState<string>('');
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [featuredVendors, setFeaturedVendors] = useState<Vendor[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   const {styles} = useStyles();
   const dispatch = useDispatch();
 
   const handleLogout = async () => {
-    api
-      .get(apiEndPoints.LOGOUT)
-      .then(res => {
-        console.log('Logout Response:', res.data);
-        if (res.data.status === 'success') {
-          dispatch(setIsLoggedIn(false));
-        } else {
-          console.log('Logout Failed:', res.data.message);
-        }
-      })
-      .catch(error => {
-        console.log('Logout Error:', error);
-      });
+    try {
+      const res = await api.get(apiEndPoints.LOGOUT);
+      console.log('Logout Response:', res.data);
+      if (res.data.status === 'success') {
+        dispatch(setIsLoggedIn(false));
+      } else {
+        console.log('Logout Failed:', res.data.message);
+      }
+    } catch (error) {
+      console.log('Logout Error:', error);
+    }
   };
+
+  const GetFeaturedVendors = async () => {
+    try {
+      const response = await api.get(apiEndPoints.GET_ALL_VENDOR_SERVICES);
+      setFeaturedVendors(response.data.services || []);
+    } catch (error) {
+      console.error('Error fetching featured vendors:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    GetFeaturedVendors();
+  }, []);
+
+  if (isLoading) {
+    return <Text>Loading...</Text>;
+  }
+
+  const bookings: Booking[] = [
+    {
+      id: '1',
+      service: 'Stage Decoration',
+      vendor: 'Ali Decor & Events',
+      date: 'May 1, 2024',
+      image: images.Ali_Decor,
+    },
+    {
+      id: '2',
+      service: 'Catering Services',
+      vendor: 'GreenLeaf Caterers',
+      date: 'April 30, 2024',
+      image: images.GreenLeaf,
+    },
+  ];
 
   return (
     <>
       <TouchableOpacity
-        onPress={
-          // () => {
-          // dispatch(setIsLoggedIn(false));
-          // }
-          handleLogout
-        }>
+        style={{
+          marginTop: screen.height * 0.005,
+        }}
+        onPress={handleLogout}>
         <Image
           source={icons.LOGOUT}
           style={{
@@ -123,7 +134,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
         />
       </TouchableOpacity>
       <ScrollView style={styles.container}>
-        {/* <SearchBar /> */}
         <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 10}}>
           <FilterDropdownButton
             label="Service Type"
@@ -135,13 +145,13 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
               'Baby Shower',
               'Anniversary',
             ]}
-            onSelect={value => setSelectedService(value)}
+            onSelect={(value: string) => setSelectedService(value)}
           />
           <FilterDropdownButton
             label="Location"
             selectedValue={selectedLocation}
             options={['Karachi', 'Lahore', 'Islamabad']}
-            onSelect={value => setSelectedLocation(value)}
+            onSelect={(value: string) => setSelectedLocation(value)}
           />
           <FilterDropdownButton
             label="Price Range"
@@ -153,40 +163,42 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
               '₨3001 - ₨5000',
               '₨5001+',
             ]}
-            onSelect={value => setSelectedPriceRange(value)}
+            onSelect={(value: string) => setSelectedPriceRange(value)}
           />
           <FilterDropdownButton
             label="Rating"
             selectedValue={selectedRating}
             options={['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars']}
-            onSelect={value => setSelectedRating(value)}
+            onSelect={(value: string) => setSelectedRating(value)}
           />
         </View>
+
         <Text style={styles.heading}>Welcome</Text>
         <CustomBidCard
           type="Custom Bid"
           price="Start Bid"
           delivery=""
           isNegotiable={true}
-          onPress={() => {
-            setIsModalVisible(true);
-          }}
+          onPress={() => setIsModalVisible(true)}
         />
 
         <Text style={styles.subHeading}>Featured Vendors</Text>
         <FlatList
-          data={vendors}
-          renderItem={({item}) => (
+          data={featuredVendors}
+          renderItem={({item}: any) => (
             <VendorCard
-              onPress={() => {
-                navigation.navigate('VendorProfile');
-              }}
-              image={item.image}
-              name={item.name}
-              rating={item.rating}
+              onPress={() =>
+                navigation.navigate('VendorProfile', {vendorId: item.vendor})
+              }
+              image={
+                images[item?.title?.replace(/\s+/g, '_')] || images.defaultImage
+              }
+              name={item?.title}
+              rating={4.5} // Assuming a default rating
+              rate={`₨${item.rate}`}
             />
           )}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item._id}
           numColumns={2}
         />
 

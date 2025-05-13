@@ -11,7 +11,7 @@ export type AppStackParamsList = {
   HomeTabs: undefined;
   AvailableBids: undefined;
   HomeScreen: undefined;
-  VendorProfile: undefined;
+  VendorProfile: {vendorId: number};
   ChatScreen: {
     userId: string;
     receiverId: string;

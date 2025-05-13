@@ -18,6 +18,8 @@ import images from '../../../assets/images';
 import {screen} from '../../../utils/constants';
 import {NavigationProp} from '@react-navigation/native';
 import FilterDropdownButton from '../../../components/FilterButtons';
+import {selectToken, selectUserId} from '../../../store/reducer/user';
+import {useSelector} from 'react-redux';
 
 interface VendorProfileScreenProps {
   navigation: NavigationProp<any>; // Define your navigation prop type here
@@ -27,6 +29,16 @@ const VendorProfileScreen: React.FC<VendorProfileScreenProps> = ({
   navigation,
 }) => {
   const {styles} = useStyles();
+  const {vendorId} = navigation
+    .getState()
+    .routes.find(route => route.name === 'VendorProfile')?.params || {
+    vendorId: null,
+  };
+  console.log('Vendor ID:', vendorId);
+
+  const userToken = useSelector(selectToken);
+  const userId = useSelector(selectUserId);
+
   const [selectedService, setSelectedService] = React.useState<string | null>(
     null,
   );
@@ -158,7 +170,16 @@ const VendorProfileScreen: React.FC<VendorProfileScreenProps> = ({
         keyExtractor={item => item.title}
       />
 
-      <VendorProfile />
+      <VendorProfile
+        onPress={() =>
+          navigation.navigate('ChatScreen', {
+            recieverId: vendorId,
+            token: userToken,
+            userName: 'User Name',
+            userId: userId,
+          })
+        }
+      />
 
       <Text
         style={{
