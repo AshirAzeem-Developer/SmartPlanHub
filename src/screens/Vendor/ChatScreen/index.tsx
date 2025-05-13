@@ -34,50 +34,52 @@ const socket = io('http://192.168.18.80:3000', {
 });
 
 export default function ChatScreen({route, navigation}: ChatScreenProps) {
-  const {userId, receiverId, token} = route.params;
+  const {userId, receiverId, token, userName} = route.params;
 
   console.log(
     'User ID from route params:',
     userId,
     'Receiver ID from route params:',
     receiverId,
+    'User Name from route params:',
+    userName,
   );
 
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [receiverName, setReceiverName] = useState(
-    route.params.receiverName as any,
+    route.params.userName as any,
   );
   console.log('thisis the receiver name', receiverName);
 
-  useEffect(() => {
-    // Fetch receiver info
-    axios
-      .get(`http://192.168.18.80:3000/api/users/${receiverId}`, {
-        headers: {Authorization: `Bearer ${token}`},
-      })
-      .then(res => {
-        setReceiverName(res.data.user.name || res.data.user.email);
-        console.log('Response from receiver info:', res);
-      });
+  // useEffect(() => {
+  //   // Fetch receiver info
+  //   axios
+  //     .get(`http://192.168.18.80:3000/api/users/${receiverId}`, {
+  //       headers: {Authorization: `Bearer ${token}`},
+  //     })
+  //     .then(res => {
+  //       setReceiverName(res.data.user.name || res.data.user.email);
+  //       console.log('Response from receiver info:', res);
+  //     });
 
-    socket.emit('register_user', userId);
+  //   socket.emit('register_user', userId);
 
-    socket.on('chat_message', message => {
-      const msg: IMessage = {
-        _id: message._id || new Date().getTime(),
-        text: message.message,
-        createdAt: message.createdAt || new Date(),
-        user: {
-          _id: message.sender === userId ? userId : receiverId, // ensure correct alignment
-        },
-      };
-      setMessages(prevMessages => GiftedChat.append(prevMessages, [msg]));
-    });
+  //   socket.on('chat_message', message => {
+  //     const msg: IMessage = {
+  //       _id: message._id || new Date().getTime(),
+  //       text: message.message,
+  //       createdAt: message.createdAt || new Date(),
+  //       user: {
+  //         _id: message.sender === userId ? userId : receiverId, // ensure correct alignment
+  //       },
+  //     };
+  //     setMessages(prevMessages => GiftedChat.append(prevMessages, [msg]));
+  //   });
 
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
+  //   return () => {
+  //     socket.disconnect();
+  //   };
+  // }, []);
 
   useEffect(() => {
     axios

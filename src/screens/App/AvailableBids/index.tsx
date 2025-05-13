@@ -169,7 +169,7 @@ const AvailableBids = ({navigation}: any) => {
   return (
     <>
       <ScrollView style={{flex: 1, backgroundColor: '#f5f5f5', padding: 10}}>
-        <SearchBar />
+        {/* <SearchBar /> */}
         <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 10}}>
           <FilterDropdownButton
             label="Service Type"
