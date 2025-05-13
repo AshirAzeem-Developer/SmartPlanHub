@@ -50,6 +50,7 @@ const useStyles = () => {
     },
     bidCardsContainer: {
       paddingHorizontal: sizes.WIDTH * 0.05,
+      marginTop: sizes.HEIGHT * 0.02,
     },
     bidCard: {
       backgroundColor: '#fff',

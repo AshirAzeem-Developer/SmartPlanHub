@@ -152,7 +152,7 @@ const BookingManagementScreen = () => {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.calendarButton}
           onPress={handleViewCalendar}>
           <Image
@@ -164,7 +164,7 @@ const BookingManagementScreen = () => {
             }}
           />
           <Text style={styles.calendarText}>View Calendar</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <View style={styles.bookingsContainer}>
           {bookings.map((item, index) => (

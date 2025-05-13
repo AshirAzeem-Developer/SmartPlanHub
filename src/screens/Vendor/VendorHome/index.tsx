@@ -44,11 +44,11 @@ const VendorHome = ({navigation}: any) => {
             <Text style={styles.link}>Unread messages</Text>
           </View>
 
-          <View style={styles.card}>
+          {/* <View style={styles.card}>
             <Text style={styles.cardTitle}>Inquiries</Text>
             <Text style={styles.cardValue}>5</Text>
             <Text style={styles.cardSubText}>New inquiries</Text>
-          </View>
+          </View> */}
         </View>
 
         {/* <Text style={styles.quickActionsTitle}>Quick Actions</Text>

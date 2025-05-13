@@ -162,7 +162,7 @@ const BiddingManagementScreen = () => {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.viewAllButton}
           onPress={handleViewAllBids}>
           <Image
@@ -175,7 +175,7 @@ const BiddingManagementScreen = () => {
             }}
           />
           <Text style={styles.viewAllText}>View All Bids</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <View style={styles.bidCardsContainer}>
           {bids.map((item, index) => (
@@ -232,7 +232,7 @@ const BiddingManagementScreen = () => {
           ))}
         </View>
 
-        <Text style={styles.notificationHeading}>Bid Notifications</Text>
+        {/* <Text style={styles.notificationHeading}>Bid Notifications</Text>
         {notifications.map((note, idx) => (
           <View key={idx} style={styles.notificationCard}>
             <Text style={styles.notificationTitle}>{note.title}</Text>
@@ -247,7 +247,7 @@ const BiddingManagementScreen = () => {
               }}
             />
           </View>
-        ))}
+        ))} */}
       </ScrollView>
       {isBidModalVisible && (
         <View style={styles.modalOverlay}>
