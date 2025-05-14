@@ -14,7 +14,7 @@ const useStyles = () => {
       backgroundColor: '#fff',
       padding: 20,
       justifyContent: 'center',
-      // marginTop: -sizes.HEIGHT * 0.0,
+      marginTop: -sizes.HEIGHT * 0.02,
     },
     title: {
       fontSize: 22,
@@ -128,6 +128,15 @@ const useStyles = () => {
       alignItems: 'center',
       marginTop: sizes.HEIGHT * 0.005,
       marginBottom: sizes.HEIGHT * 0.005,
+    },
+    pickerInput: {
+      borderWidth: 2,
+      borderColor: '#ccc',
+      borderRadius: 8,
+      padding: 10,
+      marginBottom: 15,
+      backgroundColor: '#fff',
+      fontSize: 16,
     },
   });
 

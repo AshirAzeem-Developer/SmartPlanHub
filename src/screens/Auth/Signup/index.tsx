@@ -18,11 +18,88 @@ import {NavigationProp} from '@react-navigation/native';
 import CustomHeader from '../../../components/CustomHeader/CustomHeader';
 import api from '../../../utils/api';
 import apiEndPoints from '../../../constants/apiEndPoints';
+import MultiSelectDropdown from '../../../components/MultiSelect';
 
 interface SignupProps {
   navigation: NavigationProp<any>;
 }
-
+const SERVICE_CATEGORIES = [
+  'Wedding Planning',
+  'Birthday Party Planning',
+  'Baby Shower Planning',
+  'Engagement Party Planning',
+  'Bridal Shower Planning',
+  'Anniversary Party Planning',
+  'Corporate Event Planning',
+  'Product Launch Events',
+  'Gala Dinners',
+  'Award Ceremonies',
+  'Charity Fundraisers',
+  'Graduation Parties',
+  'Farewell Parties',
+  'Housewarming Parties',
+  'Holiday Parties (Christmas, Halloween, Eid, etc.)',
+  'Religious Ceremonies',
+  'Festivals and Fairs',
+  'Bachelor / Bachelorette Parties',
+  'Sweet 16 / Quinceañera',
+  'Retirement Parties',
+  'Cultural Events (Mehndi, Sangeet, etc.)',
+  'Full-Service Catering',
+  'Buffet Catering',
+  'Cocktail Reception Catering',
+  'Dessert Table Catering',
+  'Live Food Stations (BBQ, Tandoor, Pasta Stations, etc.)',
+  'Food Truck Catering',
+  'Cake and Bakery Services',
+  'Bartending Services',
+  'Beverage Stations (Tea, Coffee, Mocktails, Juices)',
+  'Live Bands',
+  'DJs',
+  'Stand-up Comedians',
+  'Emcees / Hosts',
+  'Magicians',
+  'Dancers (Cultural, Hip-Hop, Ballet)',
+  'Fire Shows',
+  'Kids’ Entertainment (Clowns, Face Painting, Puppet Shows)',
+  'Celebrity Appearances',
+  'Motivational Speakers',
+  'Wedding Decor',
+  'Themed Birthday Decor',
+  'Stage Decoration',
+  'Floral Arrangements',
+  'Balloon Decoration',
+  'Lighting and Effects (LEDs, Chandeliers, Fairy Lights)',
+  'Photo Booth Setup',
+  'Table Settings and Centerpieces',
+  'Backdrop Design',
+  'Lounge Furniture Rentals',
+  'Event Photography',
+  'Wedding Films',
+  'Live Streaming Services',
+  'Drone Videography',
+  'Instant Photo Printing',
+  '360-Degree Photo Booths',
+  'Event Rentals (Tents, Chairs, Tables)',
+  'Sound and Lighting Equipment Rental',
+  'Stage Setup and AV Management',
+  'Transportation (Guest Shuttles, Limos, Vintage Cars)',
+  'Security Services',
+  'Valet Parking',
+  'Cleaning Services',
+  'Power Backup (Generators)',
+  'Permit and License Handling',
+  'Makeup Artists',
+  'Hair Stylists',
+  'Mehndi / Henna Artists',
+  'Styling Services',
+  'Personal Shoppers',
+  'Custom Invitation Cards',
+  'Return Gifts',
+  'Event Souvenirs',
+  'Wedding Favors',
+  'Digital Invitations (E-invites)',
+];
 const Signup: React.FC<SignupProps> = ({navigation}) => {
   const {styles, colors} = useStyles();
   const [selectedRole, setSelectedRole] = useState('User');
@@ -32,40 +109,49 @@ const Signup: React.FC<SignupProps> = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState('');
 
   function handleCreateAccount() {
     setIsLoading(true);
-    if (!isChecked || !phoneNumber || !fullName || !email || !password) {
+    if (
+      !isChecked ||
+      !phoneNumber ||
+      !fullName ||
+      !email ||
+      !password ||
+      (selectedRole === 'Vendor' && categories.length === 0)
+    ) {
+      Alert.alert('Please fill in all fields and agree to the terms.');
+      setIsLoading(false);
       return;
     }
-    let data = {
+
+    const data = {
       name: fullName,
       email: email,
       password: password,
       phoneNum: phoneNumber,
       role: selectedRole.toLowerCase(),
+      ...(selectedRole === 'Vendor' && {categories}),
     };
 
-    // navigation.navigate('Login');
+    console.log('Register Data ->', JSON.stringify(data, null, 2));
 
     api
       .post(apiEndPoints.SIGNUP, data)
       .then(res => {
         setIsLoading(false);
-        console.log('Response:', res.data);
         if (res.data.status === 'success') {
           navigation.navigate('Login');
         } else {
           Alert.alert(res.data.message);
         }
-        console.log('Response:', res);
       })
       .catch(error => {
         setIsLoading(false);
-        console.error('Error:', error.response.data.message);
+        Alert.alert(error.response.data.message || 'Signup failed');
       });
-
-    console.log('Register Data ->', JSON.stringify(data, null, 2));
   }
 
   return (
@@ -81,7 +167,10 @@ const Signup: React.FC<SignupProps> = ({navigation}) => {
               styles.roleButton,
               selectedRole === 'User' && styles.selectedRole,
             ]}
-            onPress={() => setSelectedRole('User')}>
+            onPress={() => {
+              setSelectedRole('User');
+              setCategories([]); // Clear categories when switching to user
+            }}>
             <Text
               style={[
                 styles.roleText,
@@ -140,6 +229,17 @@ const Signup: React.FC<SignupProps> = ({navigation}) => {
               },
             ]}
           />
+          {selectedRole === 'Vendor' && (
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Service Categories</Text>
+              <MultiSelectDropdown
+                items={SERVICE_CATEGORIES}
+                selectedItems={categories}
+                setSelectedItems={setCategories}
+                placeholder="Select Service Categories"
+              />
+            </View>
+          )}
 
           <Text style={styles.label}>Password</Text>
           <InputComponent
