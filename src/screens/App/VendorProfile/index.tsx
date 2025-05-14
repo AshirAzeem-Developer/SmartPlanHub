@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   ScrollView,
@@ -20,6 +20,8 @@ import {NavigationProp} from '@react-navigation/native';
 import FilterDropdownButton from '../../../components/FilterButtons';
 import {selectToken, selectUserId} from '../../../store/reducer/user';
 import {useSelector} from 'react-redux';
+import api from '../../../utils/api';
+import apiEndPoints from '../../../constants/apiEndPoints';
 
 interface VendorProfileScreenProps {
   navigation: NavigationProp<any>; // Define your navigation prop type here
@@ -46,19 +48,6 @@ const VendorProfileScreen: React.FC<VendorProfileScreenProps> = ({
   const userId = useSelector(selectUserId);
 
   console.log('This is the USer id', userId);
-
-  const [selectedService, setSelectedService] = React.useState<string | null>(
-    null,
-  );
-  const [selectedLocation, setSelectedLocation] = React.useState<string | null>(
-    null,
-  );
-  const [selectedPriceRange, setSelectedPriceRange] = React.useState<
-    string | null
-  >(null);
-  const [selectedRating, setSelectedRating] = React.useState<string | null>(
-    null,
-  );
   const pricingData = [
     {title: 'Basic Package', price: '$99', description: 'Standard service'},
     {title: 'Premium Package', price: '$199', description: 'Enhanced service'},
@@ -108,6 +97,23 @@ const VendorProfileScreen: React.FC<VendorProfileScreenProps> = ({
       image: images.JAVED_REVIEWS,
     },
   ];
+
+  function GetVendorProfileData() {
+    api
+      .get(apiEndPoints.GET_VENDOR_PROFILE(vendorId))
+      .then(response => {
+        console.log('Vendor Profile Data:', response.data);
+        // Handle the response data as needed
+      })
+      .catch(error => {
+        console.error('Error fetching vendor profile data:', error);
+        // Handle the error
+      });
+  }
+
+  useEffect(() => {
+    GetVendorProfileData();
+  }, []);
 
   return (
     <ScrollView style={{padding: 20}}>

@@ -25,7 +25,7 @@ export default function MessagedUsersScreen({navigation, route}: any) {
 
   useEffect(() => {
     api
-      .get('http://192.168.18.80:3000/api/v1/chat/messaged-users', {
+      .get('http://192.168.0.102:3000/api/v1/chat/messaged-users', {
         headers: {
           Authorization: `Bearer ${token}`,
         },

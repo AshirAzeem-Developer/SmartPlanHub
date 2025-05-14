@@ -61,7 +61,7 @@ const VALID_DAYS = [
   'Friday',
   'Monday-Friday',
 ];
-const BASE_URL = 'http://192.168.18.80:3000';
+const BASE_URL = 'http://192.168.0.102:3000';
 
 const AddServiceModalView: React.FC<ModalProps> = ({
   visible,
