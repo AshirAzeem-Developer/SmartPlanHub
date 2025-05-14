@@ -235,7 +235,7 @@ const AvailableBids = ({navigation}: any) => {
 
         {filteredBids.length === 0 && (
           <Text style={{textAlign: 'center', marginTop: 20}}>
-            This vendor has cuurently no matching data found.
+            This vendor has currently no matching data found.
           </Text>
         )}
 
