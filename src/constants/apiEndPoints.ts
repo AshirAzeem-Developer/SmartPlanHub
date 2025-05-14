@@ -6,7 +6,7 @@ export default {
 
   // ============== >> USER << ===============
   POST_BID: `/bid`,
-  GET_ALL_BIDS: `/bid`,
+
   GET_ALL_VENDOR_SERVICES: `/services/public`,
   GET_VENDOR_PROFILE: (vendorId: any) => `/services/vendor/${vendorId}`,
   GET_VENDOR_REVIEWS: (vendorId: any) => `/reviews/vendor/${vendorId}`,
@@ -25,4 +25,5 @@ export default {
   GET_ALL_REVIEWS_OF_VENDOR: (vendorId: any) => `/reviews/vendor/${vendorId}`,
   GET_AVERAGE_RATING_OF_VENDOR: (vendorId: any) =>
     `/reviews/averageRating/${vendorId}`,
+  GET_ALL_BIDS: `/bid`,
 };

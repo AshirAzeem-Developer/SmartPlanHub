@@ -76,11 +76,16 @@ const useStyles = () => {
       paddingHorizontal: sizes.WIDTH * 0.025,
       paddingVertical: sizes.HEIGHT * 0.005,
       borderRadius: sizes.WIDTH * 0.06,
+      width: sizes.WIDTH * 0.2,
+      alignSelf: 'flex-end',
+      textAlign: 'center',
+      marginBottom: sizes.HEIGHT * 0.015,
     },
     statusText: {
       fontSize: sizes.WIDTH * 0.03,
       fontWeight: '600',
       color: '#fff',
+      textAlign: 'center',
     },
     statusOpen: {
       backgroundColor: '#4a90e2',
@@ -208,6 +213,12 @@ const useStyles = () => {
     modalCancelText: {
       color: '#000',
       fontWeight: '600',
+    },
+    noBidsText: {
+      fontSize: sizes.WIDTH * 0.04,
+      fontWeight: '600',
+      textAlign: 'center',
+      marginTop: sizes.HEIGHT * 0.05,
     },
   });
 

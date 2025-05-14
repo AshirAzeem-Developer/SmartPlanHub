@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -15,6 +15,8 @@ import icons from '../../../assets/icons';
 import CustomHeader from '../../../components/CustomHeader/CustomHeader';
 import InputComponent from '../../../components/global/InputComponent';
 import {screen} from '../../../utils/constants';
+import api from '../../../utils/api';
+import apiEndPoints from '../../../constants/apiEndPoints';
 
 const BiddingManagementScreen = () => {
   const {styles} = useStyles();
@@ -24,29 +26,8 @@ const BiddingManagementScreen = () => {
   const [selectedBidIndex, setSelectedBidIndex] = useState<number | null>(null);
   const [bidAmount, setBidAmount] = useState('');
   const [isEditing, setIsEditing] = useState(false);
-  const [bids, setBids] = useState([
-    {
-      title: 'Walima Photography',
-      status: 'open', // open | placed | skipped
-      date: 'May 10, 2024 | 7:00 PM',
-      client: 'Ahmed Khan',
-      amount: '',
-    },
-    {
-      title: 'Corporate Seminar Coverage',
-      status: 'placed',
-      date: 'May 18, 2024 | 12:00 PM',
-      client: 'Fatima Sheikh',
-      amount: '25000',
-    },
-    {
-      title: 'Birthday Event Photoshoot',
-      status: 'open',
-      date: 'May 22, 2024 | 4:00 PM',
-      client: 'Hassan Ali',
-      amount: '',
-    },
-  ]);
+  const [bids, setBids] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [notifications, setNotifications] = useState([
     {
@@ -142,6 +123,41 @@ const BiddingManagementScreen = () => {
     setBidModalVisible(false);
   };
 
+  function FetchAllBids() {
+    setIsLoading(true);
+    api
+      .get(apiEndPoints.GET_ALL_BIDS)
+      .then(response => {
+        const fetchedBids = response.data.data.bids.map((bid: any) => ({
+          id: bid._id,
+          title: bid.requestDetails,
+          status: bid.status === 'pending' ? 'open' : 'placed',
+          date: new Date(bid.preferredStartDate).toLocaleDateString('en-GB', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+          }),
+          client: bid.requester, // Replace with actual client name if available
+          amount: '',
+          category: bid.category,
+          minBudget: bid.budgetRange.min,
+          maxBudget: bid.budgetRange.max,
+        }));
+
+        setBids(fetchedBids);
+      })
+      .catch(error => {
+        console.error('Error fetching all bids:', error);
+        Alert.alert('Error', 'Failed to load bids. Please try again.');
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
+
+  useEffect(() => {
+    FetchAllBids();
+  }, []);
   return (
     <>
       <CustomHeader showMenu />
@@ -160,28 +176,20 @@ const BiddingManagementScreen = () => {
         }}
         style={styles.container}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          <RefreshControl refreshing={isLoading} onRefresh={FetchAllBids} />
         }>
-        {/* <TouchableOpacity
-          style={styles.viewAllButton}
-          onPress={handleViewAllBids}>
-          <Image
-            source={icons.BOLT}
-            style={{
-              width: 20,
-              height: 20,
-              marginRight: 10,
-              tintColor: '#fff',
-            }}
+        {isLoading ? (
+          <ActivityIndicator
+            size="large"
+            color="#0000ff"
+            style={{marginTop: 20}}
           />
-          <Text style={styles.viewAllText}>View All Bids</Text>
-        </TouchableOpacity> */}
-
-        <View style={styles.bidCardsContainer}>
-          {bids.map((item, index) => (
-            <View key={index} style={styles.bidCard}>
-              <View style={styles.cardHeader}>
-                <Text style={styles.cardTitle}>{item.title}</Text>
+        ) : bids.length === 0 ? (
+          <Text style={styles.noBidsText}>No Bids Available</Text>
+        ) : (
+          <View style={styles.bidCardsContainer}>
+            {bids.map((item: any, index) => (
+              <View key={item.id} style={styles.bidCard}>
                 <View
                   style={[
                     styles.statusTag,
@@ -190,65 +198,60 @@ const BiddingManagementScreen = () => {
                       : styles.statusPlaced,
                   ]}>
                   <Text style={styles.statusText}>
-                    {item.status === 'open' ? 'Open for Bids' : 'Bid Placed'}
+                    {item.status === 'open' ? 'Open' : 'Placed'}
                   </Text>
                 </View>
-              </View>
+                <View style={styles.cardHeader}>
+                  <Text style={styles.cardTitle}>{item.title}</Text>
+                </View>
 
-              <View style={styles.cardBody}>
-                <Text style={styles.bidInfo}>
-                  <Text style={styles.label}>Date:</Text> {item.date}
-                </Text>
-                <Text style={styles.bidInfo}>
-                  <Text style={styles.label}>Client:</Text> {item.client}
-                </Text>
-                <Text style={styles.bidInfo}>
-                  <Text style={styles.label}>Price:</Text>{' '}
-                  {item.amount || 'N/A'}
-                </Text>
+                <View style={styles.cardBody}>
+                  <Text style={styles.bidInfo}>
+                    <Text style={styles.label}>Date:</Text> {item.date}
+                  </Text>
+                  <Text style={styles.bidInfo}>
+                    <Text style={styles.label}>Client:</Text> {item.client}
+                  </Text>
+                  <Text style={styles.bidInfo}>
+                    <Text style={styles.label}>Category:</Text>{' '}
+                    {item.category || 'N/A'}
+                  </Text>
+                  <Text style={styles.bidInfo}>
+                    <Text style={styles.label}>Budget:</Text>{' '}
+                    {item.minBudget || 'N/A'} - {item.maxBudget || 'N/A'}
+                  </Text>
+                  <Text style={styles.bidInfo}>
+                    <Text style={styles.label}>Price:</Text>{' '}
+                    {item.amount || 'N/A'}
+                  </Text>
 
-                {item.status === 'open' ? (
-                  <View style={styles.buttonGroup}>
-                    <TouchableOpacity
-                      style={styles.acceptBtn}
-                      onPress={() => handlePlaceBid(index)}>
-                      <Text style={styles.btnText}>Place Bid</Text>
+                  {item.status === 'open' ? (
+                    <View style={styles.buttonGroup}>
+                      <TouchableOpacity
+                        style={styles.acceptBtn}
+                        onPress={() => handlePlaceBid(index)}>
+                        <Text style={styles.btnText}>Place Bid</Text>
+                      </TouchableOpacity>
+                      {/* <TouchableOpacity
+                        style={styles.declineBtn}
+                        onPress={() => handleSkipBid(index)}>
+                        <Text style={styles.btnText}>Skip</Text>
+                      </TouchableOpacity> */}
+                    </View>
+                  ) : item.status === 'placed' ? (
+                    <TouchableOpacity onPress={() => handleEditBid(index)}>
+                      <Text style={styles.viewDetails}>Edit Bid</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.declineBtn}
-                      onPress={() => handleSkipBid(index)}>
-                      <Text style={styles.btnText}>Skip</Text>
-                    </TouchableOpacity>
-                  </View>
-                ) : item.status === 'placed' ? (
-                  <TouchableOpacity onPress={() => handleEditBid(index)}>
-                    <Text style={styles.viewDetails}>Edit Bid</Text>
-                  </TouchableOpacity>
-                ) : (
-                  <Text style={styles.statusText}>Bid Skipped</Text>
-                )}
+                  ) : (
+                    <Text style={styles.statusText}>Bid Skipped</Text>
+                  )}
+                </View>
               </View>
-            </View>
-          ))}
-        </View>
-
-        {/* <Text style={styles.notificationHeading}>Bid Notifications</Text>
-        {notifications.map((note, idx) => (
-          <View key={idx} style={styles.notificationCard}>
-            <Text style={styles.notificationTitle}>{note.title}</Text>
-            <Text style={styles.notificationMessage}>{note.message}</Text>
-            <Image
-              source={icons.NOTIFICATION}
-              style={{
-                width: 20,
-                height: 20,
-                marginRight: 10,
-                tintColor: '#000',
-              }}
-            />
+            ))}
           </View>
-        ))} */}
+        )}
       </ScrollView>
+
       {isBidModalVisible && (
         <View style={styles.modalOverlay}>
           <View style={styles.modalCard}>
