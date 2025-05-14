@@ -239,16 +239,16 @@ const AvailableBids = ({navigation}: any) => {
           </Text>
         )}
 
-        {/* <View style={{padding: 10}}>
+        <View style={{padding: 10}}>
           <View>
-            {/* <Text
+            <Text
               style={{fontSize: 20, fontWeight: 'bold', marginVertical: 10}}>
               Current Bids
-            </Text> 
+            </Text>
             <FlatList
               data={filteredBids}
               keyExtractor={item => item._id}
-              renderItem={({item}) => (
+              renderItem={({item}: any) => (
                 <BidCard
                   bid={{
                     ...item,
@@ -268,7 +268,7 @@ const AvailableBids = ({navigation}: any) => {
               )}
             />
           </View>
-          <View>
+          {/* <View>
             <Text style={{fontSize: 25, fontWeight: 'bold', marginTop: 30}}>
               About
             </Text>
@@ -331,8 +331,8 @@ const AvailableBids = ({navigation}: any) => {
               />
             )}
             keyExtractor={item => item.id.toString()}
-          />
-        </View> */}
+          /> */}
+        </View>
       </ScrollView>
       {/* ============= >> Custom Request Modal << ================== */}
       <GenericModal
