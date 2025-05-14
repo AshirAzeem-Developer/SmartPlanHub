@@ -3,7 +3,7 @@ import {View, Text, Image, StyleSheet, ImageSourcePropType} from 'react-native';
 import useStyles from './style';
 
 interface ReviewCardProps {
-  id: number;
+  id: string;
   reviewer: string;
   review: string;
   date: string;

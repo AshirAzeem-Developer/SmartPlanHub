@@ -27,7 +27,7 @@ import CustomHeader from '../../../components/CustomHeader/CustomHeader';
 
 type ChatScreenProps = NativeStackScreenProps<DrawerParamList, 'ChatScreen'>;
 
-const socket = io('http://192.168.0.102:3000', {
+const socket = io('http://192.168.18.80:3000', {
   transports: ['websocket'],
   forceNew: true,
   reconnection: true,
@@ -54,7 +54,7 @@ export default function ChatScreen({route, navigation}: ChatScreenProps) {
   // useEffect(() => {
   //   // Fetch receiver info
   //   axios
-  //     .get(`http://192.168.0.102:3000/api/users/${receiverId}`, {
+  //     .get(`http://192.168.18.80:3000/api/users/${receiverId}`, {
   //       headers: {Authorization: `Bearer ${token}`},
   //     })
   //     .then(res => {
@@ -84,7 +84,7 @@ export default function ChatScreen({route, navigation}: ChatScreenProps) {
   useEffect(() => {
     axios
       .get(
-        `http://192.168.0.102:3000/api/v1/chat/messages/${userId}/${receiverId}`,
+        `http://192.168.18.80:3000/api/v1/chat/messages/${userId}/${receiverId}`,
         {
           headers: {Authorization: `Bearer ${token}`},
         },
@@ -116,7 +116,7 @@ export default function ChatScreen({route, navigation}: ChatScreenProps) {
     socket.emit('chat_message', msgToSend);
     setMessages(prevMessages => GiftedChat.append(prevMessages, messages));
 
-    axios.post('http://192.168.0.102:3000/api/v1/chat/send', msgToSend, {
+    axios.post('http://192.168.18.80:3000/api/v1/chat/send', msgToSend, {
       headers: {Authorization: `Bearer ${token}`},
     });
   }, []);

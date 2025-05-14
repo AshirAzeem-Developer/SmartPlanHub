@@ -1,5 +1,5 @@
 export default {
-  BASE_URL: `http://192.168.0.102:3000/api/v1`,
+  BASE_URL: `http://192.168.18.80:3000/api/v1`,
   LOGIN: `/users/login`,
   SIGNUP: `/users/signup`,
   LOGOUT: `/users/logout`,
@@ -8,7 +8,10 @@ export default {
   POST_BID: `/bid`,
   GET_ALL_BIDS: `/bid`,
   GET_ALL_VENDOR_SERVICES: `/services/public`,
-  GET_VENDOR_PROFILE: (vendorId: any) => `/services/profile/${vendorId}`,
+  GET_VENDOR_PROFILE: (vendorId: any) => `/services/vendor/${vendorId}`,
+  GET_VENDOR_REVIEWS: (vendorId: any) => `/reviews/vendor/${vendorId}`,
+
+  GET_ALL_BIDS_OF_VENDOR: (vendorId: any) => `/bid/vendor/${vendorId}`,
 
   // =============== >> VENDOR << ===============
   POST_NEW_SERVICE: `/services`,

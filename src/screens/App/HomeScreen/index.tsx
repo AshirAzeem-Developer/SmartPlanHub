@@ -90,7 +90,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
       setIsLoading(false);
     }
   };
-  const BASE_URL = 'http://192.168.0.102:3000';
+  const BASE_URL = 'http://192.168.18.80:3000';
   useEffect(() => {
     GetFeaturedVendors();
   }, []);
@@ -197,7 +197,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
               image={
                 item?.gallery?.length > 0
                   ? {uri: `${BASE_URL}${item?.gallery[0].url}`}
-                  : images.DUMMY_VENDOR
+                  : ''
               }
               name={item?.title}
               rating={4.5} // Assuming a default rating

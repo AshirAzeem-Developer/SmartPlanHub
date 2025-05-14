@@ -25,6 +25,7 @@ import api from '../../../utils/api';
 import apiEndPoints from '../../../constants/apiEndPoints';
 import {useSelector} from 'react-redux';
 import {selectToken, selectUserId} from '../../../store/reducer/user';
+import {screen} from '../../../utils/constants';
 interface Bid {
   _id: string;
   requestDetails: string;
@@ -54,6 +55,12 @@ const AvailableBids = ({navigation}: any) => {
   const [onSubmit, setOnSubmit] = useState();
   const token = useSelector(selectToken);
   const userId = useSelector(selectUserId);
+  const {vendorId, vendorName} = navigation
+    .getState()
+    .routes.find((route: any) => route.name === 'VendorProfile')?.params || {
+    vendorId: null,
+    vendorName: null,
+  };
 
   const portfolios = [
     {
@@ -101,7 +108,11 @@ const AvailableBids = ({navigation}: any) => {
 
   function getAllBids() {
     api
-      .get(apiEndPoints.GET_ALL_BIDS)
+      .get(apiEndPoints.GET_ALL_BIDS_OF_VENDOR(vendorId), {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then(response => {
         if (response.data.status !== 'success') {
           console.error('Error fetching bids:', response.data);
@@ -170,7 +181,13 @@ const AvailableBids = ({navigation}: any) => {
     <>
       <ScrollView style={{flex: 1, backgroundColor: '#f5f5f5', padding: 10}}>
         {/* <SearchBar /> */}
-        <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 10}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            gap: 10,
+            marginTop: screen.height * 0.04,
+          }}>
           <FilterDropdownButton
             label="Service Type"
             selectedValue={selectedService}
@@ -218,16 +235,16 @@ const AvailableBids = ({navigation}: any) => {
 
         {filteredBids.length === 0 && (
           <Text style={{textAlign: 'center', marginTop: 20}}>
-            No bids match the selected filters.
+            This vendor has cuurently no matching data found.
           </Text>
         )}
 
-        <View style={{padding: 10}}>
+        {/* <View style={{padding: 10}}>
           <View>
             {/* <Text
               style={{fontSize: 20, fontWeight: 'bold', marginVertical: 10}}>
               Current Bids
-            </Text> */}
+            </Text> 
             <FlatList
               data={filteredBids}
               keyExtractor={item => item._id}
@@ -315,7 +332,7 @@ const AvailableBids = ({navigation}: any) => {
             )}
             keyExtractor={item => item.id.toString()}
           />
-        </View>
+        </View> */}
       </ScrollView>
       {/* ============= >> Custom Request Modal << ================== */}
       <GenericModal

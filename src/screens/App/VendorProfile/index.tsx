@@ -1,15 +1,14 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   ScrollView,
   Text,
   FlatList,
-  Touchable,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import SearchBar from '../../../components/SearchBar';
 import FilterButtons from '../../../components/FilterButtons';
-import PricingCard from '../../../components/PricingCard';
 import VendorProfile from '../../../components/VendorProfileCard';
 import PortfolioCard from '../../../components/PortfolioCard';
 import ReviewCard from '../../../components/ReviewsCard';
@@ -17,139 +16,118 @@ import useStyles from './style';
 import images from '../../../assets/images';
 import {screen} from '../../../utils/constants';
 import {NavigationProp} from '@react-navigation/native';
-import FilterDropdownButton from '../../../components/FilterButtons';
-import {selectToken, selectUserId} from '../../../store/reducer/user';
 import {useSelector} from 'react-redux';
+import {selectToken, selectUserId} from '../../../store/reducer/user';
 import api from '../../../utils/api';
 import apiEndPoints from '../../../constants/apiEndPoints';
 
 interface VendorProfileScreenProps {
-  navigation: NavigationProp<any>; // Define your navigation prop type here
+  navigation: NavigationProp<any>;
+}
+
+interface VendorData {
+  _id: string;
+  name: string;
+  phoneNum: string;
+  email: string;
+  role: string;
+  categories: string[];
+  photo?: string;
+}
+
+interface Service {
+  _id: string;
+  vendor: string;
+  title: string;
+  rate: number;
+  description: string;
+  availability: {
+    day: string;
+    startTime: string;
+    endTime: string;
+    _id: string;
+  }[];
+}
+
+interface GalleryItem {
+  _id: string;
+  vendor: string;
+  filename: string;
+  url: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface Review {
+  _id: string;
+  vendor: string;
+  user: string;
+  rating: number;
+  response: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 const VendorProfileScreen: React.FC<VendorProfileScreenProps> = ({
   navigation,
 }) => {
   const {styles} = useStyles();
-  const {vendorId} = navigation
+  const [vendorData, setVendorData] = useState<VendorData | null>(null);
+  const [services, setServices] = useState<Service[]>([]);
+  const [gallery, setGallery] = useState<GalleryItem[]>([]);
+  const [reviewsData, setReviewsData] = useState<Review[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const {vendorId, vendorName} = navigation
     .getState()
     .routes.find(route => route.name === 'VendorProfile')?.params || {
     vendorId: null,
-  };
-  const {vendorName} = navigation
-    .getState()
-    .routes.find(route => route.name === 'VendorProfile')?.params || {
     vendorName: null,
   };
-  console.log('Vendor Name:', vendorName);
-  console.log('Vendor ID:', vendorId);
 
   const userToken = useSelector(selectToken);
   const userId = useSelector(selectUserId);
 
-  console.log('This is the USer id', userId);
-  const pricingData = [
-    {title: 'Basic Package', price: '$99', description: 'Standard service'},
-    {title: 'Premium Package', price: '$199', description: 'Enhanced service'},
-    {title: 'Custom Package', price: 'Contact for quote', description: ''},
-  ];
-
-  const portfolioData = [
-    {
-      id: 1,
-      image: images.KHAN_PHOTOGRAPHY_PORTFOLIO_IMAGE,
-      name: "Khan's Photography & Events",
-      rating: 5,
-    },
-    {
-      id: 2,
-      image: images.LAHORE_WEDDING_PLANNERS_PORTFOLIO_IMAGE,
-      name: 'Lahore Wedding Planners',
-      rating: 4,
-    },
-    {
-      id: 3,
-      image: images.KARACHI_MOMENTS_PORTFOLIO_IMAGE,
-      name: 'Karachi Moments Studio',
-      rating: 4,
-    },
-    {
-      id: 4,
-      image: images.ISLAMABAD_EVENT_EXPERTS_PORTFOLIO_IMAGE,
-      name: 'Islamabad Event Experts',
-      rating: 4,
-    },
-  ];
-
-  const reviewsData = [
-    {
-      id: 1,
-      reviewer: 'Areeba Siddiqui',
-      date: 'April 1, 2025',
-      review: 'Bohat zabardast service thi! Highly recommended.',
-      image: images.AREEBA_REVIEWS,
-    },
-    {
-      id: 2,
-      reviewer: 'Usman Javed',
-      date: 'March 28, 2025',
-      review: 'Time pe kaam deliver kia, great experience!',
-      image: images.JAVED_REVIEWS,
-    },
-  ];
-
-  function GetVendorProfileData() {
-    api
-      .get(apiEndPoints.GET_VENDOR_PROFILE(vendorId))
-      .then(response => {
-        console.log('Vendor Profile Data:', response.data);
-        // Handle the response data as needed
-      })
-      .catch(error => {
-        console.error('Error fetching vendor profile data:', error);
-        // Handle the error
-      });
-  }
-
   useEffect(() => {
-    GetVendorProfileData();
-  }, []);
+    if (vendorId) {
+      fetchVendorProfile();
+      fetchVendorReviews();
+    }
+  }, [vendorId]);
+
+  const fetchVendorProfile = async () => {
+    try {
+      const response = await api.get(apiEndPoints.GET_VENDOR_PROFILE(vendorId));
+      const {vendor, services, gallery} = response.data;
+      setVendorData(vendor);
+      setServices(services);
+      setGallery(gallery);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching vendor profile data:', error);
+      setLoading(false);
+    }
+  };
+
+  const fetchVendorReviews = async () => {
+    try {
+      const response = await api.get(apiEndPoints.GET_VENDOR_REVIEWS(vendorId));
+
+      setReviewsData(response?.data?.data?.reviews);
+      console.log('Review Data', response?.data?.data.reviews);
+    } catch (error) {
+      console.error('Error fetching vendor reviews:', error);
+    }
+  };
+
+  if (loading) {
+    return <Text>Loading...</Text>;
+  }
 
   return (
     <ScrollView style={{padding: 20}}>
-      {/* <SearchBar />
-      <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 10}}>
-        <FilterDropdownButton
-          label="Service Type"
-          selectedValue={selectedService}
-          options={['Plumbing', 'Cleaning', 'Electrician']}
-          onSelect={value => setSelectedService(value)}
-        />
-        <FilterDropdownButton
-          label="Location"
-          selectedValue={selectedLocation}
-          options={['Karachi', 'Lahore', 'Islamabad']}
-          onSelect={value => setSelectedLocation(value)}
-        />
-        <FilterDropdownButton
-          label="Price Range"
-          selectedValue={selectedPriceRange}
-          options={[
-            '₨0 - ₨1000',
-            '₨1001 - ₨2000',
-            '₨2001 - ₨3000',
-            '₨3001 - ₨5000',
-            '₨5001+',
-          ]}
-          onSelect={value => setSelectedPriceRange(value)}
-        />
-        <FilterDropdownButton
-          label="Rating"
-          selectedValue={selectedRating}
-          options={['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars']}
-          onSelect={value => setSelectedRating(value)}
-        />
-      </View> */}
+      {/* Vendor Profile Title Section */}
       <View
         style={{
           flexDirection: 'row',
@@ -157,75 +135,103 @@ const VendorProfileScreen: React.FC<VendorProfileScreenProps> = ({
           alignItems: 'center',
           marginTop: screen.height * 0.05,
         }}>
-        <Text style={{fontSize: 22, fontWeight: 'bold', marginVertical: 10}}>
+        <Text style={{fontSize: 25, fontWeight: 'bold', marginVertical: 10}}>
           Vendor Profile
         </Text>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('AvailableBids');
+            navigation.navigate('AvailableBids', {
+              vendorId: vendorId,
+              vendorName: vendorName,
+            });
           }}>
           <Text style={{fontSize: 15, fontWeight: 'bold', marginVertical: 10}}>
             See Available Bids
           </Text>
         </TouchableOpacity>
       </View>
-      <Text style={{fontSize: 18, fontWeight: 'bold'}}>Pricing</Text>
-      <FlatList
-        contentContainerStyle={{paddingBottom: 20, marginTop: 10, gap: 10}}
-        numColumns={3}
-        data={pricingData}
-        renderItem={({item}) => (
-          <PricingCard
-            title={item.title}
-            price={item.price}
-            description={item.description}
-          />
-        )}
-        keyExtractor={item => item.title}
-      />
 
-      <VendorProfile
-        onPress={() =>
-          navigation.navigate('ChatScreen', {
-            userId: userId,
-            receiverId: vendorId,
-            token: userToken,
-            userName: vendorName,
-          })
-        }
-      />
+      {/* Vendor Profile Section */}
+      {vendorData && (
+        <View style={{marginBottom: 20}}>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              marginBottom: 10,
+              marginTop: 20,
+            }}>
+            {vendorData.name}
+          </Text>
+          <Text style={{fontSize: 16, marginBottom: 5}}>
+            {vendorData.phoneNum} | {vendorData.email}
+          </Text>
+          {/* <Text style={{fontSize: 14, color: 'gray'}}>{vendorData.role}</Text> */}
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#007bff',
+              padding: 10,
+              borderRadius: 5,
+              marginTop: 15,
+            }}>
+            <Text
+              style={{color: 'white', textAlign: 'center', fontWeight: 'bold'}}>
+              Contact Vendor
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
-      <Text
-        style={{
-          fontSize: screen.width * 0.05,
-          fontWeight: 'bold',
-          marginTop: screen.height * 0.04,
-        }}>
-        Portfolio
+      {/* Services Section */}
+      <Text style={{fontSize: 18, fontWeight: 'bold', marginTop: 20}}>
+        Services
       </Text>
       <FlatList
-        contentContainerStyle={{
-          marginTop: 10,
-          flexDirection: 'column',
-          gap: 10,
-          padding: 10,
-          // marginHorizontal: 10,
-          justifyContent: 'space-evenly',
-          alignItems: 'center',
-        }}
-        data={portfolioData}
+        contentContainerStyle={{paddingBottom: 20, marginTop: 10, gap: 10}}
+        numColumns={1}
+        data={services}
+        renderItem={({item}) => (
+          <View
+            style={{
+              borderWidth: 1,
+              borderColor: '#ddd',
+              borderRadius: 8,
+              padding: 15,
+              marginBottom: 10,
+            }}>
+            <Text style={{fontSize: 16, fontWeight: 'bold'}}>{item.title}</Text>
+            <Text style={{fontSize: 14, color: 'gray'}}>
+              {item.description}
+            </Text>
+            <Text style={{fontSize: 16, fontWeight: 'bold', marginTop: 5}}>
+              ₨{item.rate}
+            </Text>
+          </View>
+        )}
+        keyExtractor={item => item._id}
+      />
+
+      {/* Gallery Section */}
+      <Text style={{fontSize: 18, fontWeight: 'bold', marginTop: 20}}>
+        Gallery
+      </Text>
+      <FlatList
+        contentContainerStyle={{padding: 10, gap: 10}}
+        data={gallery}
         renderItem={({item}) => (
           <PortfolioCard
-            image={item.image}
-            name={item.name}
-            rating={item.rating}
+            image={{uri: `http://192.168.18.80:3000${item.url}`}}
+            name={item?.filename || ''}
+            rating={5}
           />
         )}
         numColumns={2}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => item._id}
       />
 
-      <Text style={{fontSize: 18, fontWeight: 'bold', marginTop: 10}}>
+      {/* Reviews Section */}
+
+      <Text style={{fontSize: 18, fontWeight: 'bold', marginTop: 20}}>
         Reviews
       </Text>
       <FlatList
@@ -233,14 +239,14 @@ const VendorProfileScreen: React.FC<VendorProfileScreenProps> = ({
         data={reviewsData}
         renderItem={({item}) => (
           <ReviewCard
-            id={item.id}
-            reviewer={item.reviewer}
-            date={item.date}
-            review={item.review}
-            image={item.image}
+            id={item._id}
+            reviewer={item.user}
+            date={item.createdAt}
+            review={item.response === '' ? 'No review given' : item.response}
+            image={images.AREEBA_REVIEWS} // Placeholder image, replace with actual image if available
           />
         )}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => item?._id}
       />
     </ScrollView>
   );
