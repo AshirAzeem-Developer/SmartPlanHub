@@ -173,7 +173,15 @@ const VendorProfileScreen: React.FC<VendorProfileScreenProps> = ({
               padding: 10,
               borderRadius: 5,
               marginTop: 15,
-            }}>
+            }}
+            onPress={() =>
+              navigation.navigate('ChatScreen', {
+                userId: userId,
+                receiverId: vendorId,
+                token: userToken,
+                userName: vendorName,
+              })
+            }>
             <Text
               style={{color: 'white', textAlign: 'center', fontWeight: 'bold'}}>
               Contact Vendor
