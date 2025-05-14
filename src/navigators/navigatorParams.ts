@@ -18,6 +18,7 @@ export type AppStackParamsList = {
     token: string;
     userName?: string;
   };
+  AdminDashboard: undefined;
 };
 export type DrawerParamList = {
   VendorHome: undefined;
