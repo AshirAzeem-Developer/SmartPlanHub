@@ -85,4 +85,4 @@ yarn ios
 
 ## Conclusion
 
-This architecture, inspired by Mubashir Ali Kalhoro, focuses on dynamic styling and robust state management to ensure a responsive, maintainable, and user-friendly React Native application. By leveraging modern libraries and best practices, it provides a solid foundation for building scalable mobile applications.
+This architecture focuses on dynamic styling and robust state management to ensure a responsive, maintainable, and user-friendly React Native application. By leveraging modern libraries and best practices, it provides a solid foundation for building scalable mobile applications.
