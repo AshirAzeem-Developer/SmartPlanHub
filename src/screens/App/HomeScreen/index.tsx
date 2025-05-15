@@ -4,17 +4,15 @@ import {
   ScrollView,
   Text,
   Image,
-  StyleSheet,
   FlatList,
   TouchableOpacity,
 } from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
 import {setIsLoggedIn} from '../../../store/reducer/user';
-import SearchBar from '../../../components/SearchBar';
+import FilterDropdownButton from '../../../components/FilterButtons';
 import VendorCard from '../../../components/VendorCard';
 import BookingCard from '../../../components/BookingCard';
-import FilterDropdownButton from '../../../components/FilterButtons';
 import CustomBidCard from '../../../components/CustomBidCard';
 import GenericModal from '../../../components/Modal';
 import CustomRequestModal from '../../../components/CustomServiceRequest';
@@ -68,7 +66,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
   const handleLogout = async () => {
     try {
       const res = await api.get(apiEndPoints.LOGOUT);
-      console.log('Logout Response:', res.data);
       if (res.data.status === 'success') {
         dispatch(setIsLoggedIn(false));
       } else {
@@ -79,24 +76,56 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
     }
   };
 
+  const buildQueryParams = () => {
+    const params = new URLSearchParams();
+
+    if (selectedService) {
+      params.append('title', selectedService);
+    }
+
+    if (selectedPriceRange) {
+      // Extract minimum price from string like "₨1001 - ₨2000" or "₨5001+"
+      const match = selectedPriceRange.match(/₨(\d+)/g);
+      if (match && match.length > 0) {
+        const minPriceStr = match[0].replace('₨', '');
+        params.append('price[gte]', minPriceStr);
+      }
+    }
+
+    if (selectedLocation) {
+      params.append('location', selectedLocation);
+    }
+
+    // NOTE: You can add rating filter here if API supports it, e.g.:
+    // if (selectedRating) { params.append('rating', selectedRatingNumber); }
+
+    return params.toString();
+  };
+
   const GetFeaturedVendors = async () => {
+    setIsLoading(true);
     try {
-      const response = await api.get(apiEndPoints.GET_ALL_VENDOR_SERVICES);
+      const query = buildQueryParams();
+      const url = query
+        ? `${apiEndPoints.GET_ALL_VENDOR_SERVICES}?${query}`
+        : apiEndPoints.GET_ALL_VENDOR_SERVICES;
+
+      const response = await api.get(url);
       setFeaturedVendors(response.data.services || []);
-      console.log('This is the featured vendors', response.data.services);
     } catch (error) {
       console.error('Error fetching featured vendors:', error);
     } finally {
       setIsLoading(false);
     }
   };
-  const BASE_URL = 'http://192.168.18.80:3000';
+
+  // Fetch vendors when any filter changes
   useEffect(() => {
     GetFeaturedVendors();
-  }, []);
+  }, [selectedService, selectedPriceRange, selectedLocation]);
 
   if (isLoading) {
-    return <Text>Loading...</Text>;
+    return <Text style={{textAlign: 'center', marginTop: 20}}>Loading...</Text>;
   }
 
   const bookings: Booking[] = [
@@ -115,7 +144,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
       image: images.GreenLeaf,
     },
   ];
-
+  const getUniqueServiceTitles = (): string[] => {
+    const titles = featuredVendors.map(vendor => vendor.title);
+    return Array.from(new Set(titles));
+  };
   return (
     <>
       <TouchableOpacity
@@ -139,20 +171,16 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
           <FilterDropdownButton
             label="Service Type"
             selectedValue={selectedService}
-            options={[
-              'Birthday Party',
-              'Wedding',
-              'Corporate Event',
-              'Baby Shower',
-              'Anniversary',
-            ]}
-            onSelect={(value: string) => setSelectedService(value)}
+            options={getUniqueServiceTitles()}
+            onSelect={setSelectedService}
+            onClear={() => setSelectedService('')}
           />
           <FilterDropdownButton
             label="Location"
             selectedValue={selectedLocation}
             options={['Karachi', 'Lahore', 'Islamabad']}
-            onSelect={(value: string) => setSelectedLocation(value)}
+            onSelect={setSelectedLocation}
+            onClear={() => setSelectedLocation('')}
           />
           <FilterDropdownButton
             label="Price Range"
@@ -164,13 +192,15 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
               '₨3001 - ₨5000',
               '₨5001+',
             ]}
-            onSelect={(value: string) => setSelectedPriceRange(value)}
+            onSelect={setSelectedPriceRange}
+            onClear={() => setSelectedPriceRange('')}
           />
           <FilterDropdownButton
             label="Rating"
             selectedValue={selectedRating}
             options={['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars']}
-            onSelect={(value: string) => setSelectedRating(value)}
+            onSelect={setSelectedRating}
+            onClear={() => setSelectedRating('')}
           />
         </View>
 
@@ -186,7 +216,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
         <Text style={styles.subHeading}>Featured Vendors</Text>
         <FlatList
           data={featuredVendors}
-          renderItem={({item}: any) => (
+          renderItem={({item}) => (
             <VendorCard
               onPress={() =>
                 navigation.navigate('VendorProfile', {
@@ -196,11 +226,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
               }
               image={
                 item?.gallery?.length > 0
-                  ? {uri: `${BASE_URL}${item?.gallery[0].url}`}
+                  ? {uri: `http://192.168.0.102:3000/${item?.gallery[0].url}`}
                   : ''
               }
-              name={item?.title}
-              rating={4.5} // Assuming a default rating
+              name={item.title}
+              rating={4.5} // Adjust or fetch real rating if available
             />
           )}
           keyExtractor={item => item._id}

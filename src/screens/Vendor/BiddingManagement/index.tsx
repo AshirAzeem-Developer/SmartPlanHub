@@ -4,46 +4,30 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  StyleSheet,
   Alert,
-  Image,
   ActivityIndicator,
   RefreshControl,
 } from 'react-native';
 import useStyles from './style';
-import icons from '../../../assets/icons';
 import CustomHeader from '../../../components/CustomHeader/CustomHeader';
 import InputComponent from '../../../components/global/InputComponent';
 import {screen} from '../../../utils/constants';
 import api from '../../../utils/api';
 import apiEndPoints from '../../../constants/apiEndPoints';
+import {useSelector} from 'react-redux';
+import {selectUserId} from '../../../store/reducer/user';
 
 const BiddingManagementScreen = () => {
   const {styles} = useStyles();
-  const [refreshing, setRefreshing] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [isBidModalVisible, setBidModalVisible] = useState(false);
   const [selectedBidIndex, setSelectedBidIndex] = useState<number | null>(null);
   const [bidAmount, setBidAmount] = useState('');
   const [isEditing, setIsEditing] = useState(false);
-  const [bids, setBids] = useState([]);
+  const [bids, setBids] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  const [notifications, setNotifications] = useState([
-    {
-      title: 'Wedding Photoshoot Bid',
-      message: 'Your bid was outbid',
-    },
-    {
-      title: 'Corporate Event Bid',
-      message: 'Bid accepted by client',
-    },
-    {
-      title: 'Portrait Session Bid',
-      message: 'Awaiting client response',
-    },
-  ]);
-  // ================ >> SKIP BID FUNCTIONALITY << ===================
+  const [loadingSaveBid, setLoadingSaveBid] = useState(false);
+  const currentVendorId = useSelector(selectUserId);
+  // Skip bid functionality (local only)
   const handleSkipBid = (index: number) => {
     const updatedBids = [...bids];
     updatedBids[index].status = 'skipped';
@@ -53,7 +37,8 @@ const BiddingManagementScreen = () => {
       `You skipped bidding for ${updatedBids[index].title}`,
     );
   };
-  // ================ >> PLACE BID FUNCTIONALITY << ===================
+
+  // Open modal to place a new bid
   const handlePlaceBid = (index: number) => {
     setSelectedBidIndex(index);
     setBidAmount('');
@@ -61,103 +46,153 @@ const BiddingManagementScreen = () => {
     setBidModalVisible(true);
   };
 
-  // ================ >> BID MODAL FUNCTIONALITY << ===================
+  // Open modal to edit an existing bid
   const handleEditBid = (index: number) => {
     setSelectedBidIndex(index);
-    setBidAmount(bids[index].amount);
+    setBidAmount(bids[index].amount?.toString() || '');
     setIsEditing(true);
     setBidModalVisible(true);
   };
 
-  const handleViewAllBids = () => {
-    Alert.alert('Navigation', 'Navigate to all bids page');
-  };
-  const onRefresh = () => {
-    setRefreshing(true);
-
-    // Simulate a network request (you can replace with your real data fetching)
-    setTimeout(() => {
-      setRefreshing(false);
-      setBids([
-        {
-          title: 'Walima Photography',
-          status: 'open',
-          date: 'May 10, 2024 | 7:00 PM',
-          client: 'Ahmed Khan',
-          amount: '',
-        },
-        {
-          title: 'Corporate Seminar Coverage',
-          status: 'placed',
-          date: 'May 18, 2024 | 12:00 PM',
-          client: 'Fatima Sheikh',
-          amount: '25000',
-        },
-        {
-          title: 'Birthday Event Photoshoot',
-          status: 'open',
-          date: 'May 22, 2024 | 4:00 PM',
-          client: 'Hassan Ali',
-          amount: '',
-        },
-      ]);
-    }, 1500);
-  };
-  // =================>> SAVE BID FUNCTIONALITY << ===================
-  const handleSaveBid = () => {
-    if (!bidAmount) {
-      Alert.alert('Error', 'Please enter a bid amount');
-      return;
-    }
-
-    const updatedBids = [...bids];
-    if (selectedBidIndex !== null) {
-      updatedBids[selectedBidIndex] = {
-        ...updatedBids[selectedBidIndex],
-        status: 'placed',
-        amount: bidAmount,
-      };
-    }
-
-    setBids(updatedBids);
-    setBidModalVisible(false);
-  };
-
-  function FetchAllBids() {
+  // Fetch all bids from API
+  const fetchAllBids = async () => {
     setIsLoading(true);
-    api
-      .get(apiEndPoints.GET_ALL_BIDS)
-      .then(response => {
-        const fetchedBids = response.data.data.bids.map((bid: any) => ({
+
+    try {
+      const response = await api.get(apiEndPoints.GET_ALL_BIDS);
+      const bidsData = response.data.data.bids;
+
+      // Extract unique client IDs
+      const uniqueClientIds = [
+        ...new Set(bidsData.map((bid: any) => bid.requester)),
+      ];
+
+      // console.log('Unique Client IDs:', uniqueClientIds);
+
+      // Fetch client names for all unique IDs
+      const clientsMap: Record<string, string> = {};
+
+      await Promise.all(
+        uniqueClientIds.map(async (clientId: any) => {
+          try {
+            const res = await api.get(apiEndPoints.GET_USER_BY_ID(clientId));
+            // console.log('Clients Map:', res);
+            clientsMap[clientId] =
+              res?.data?.data?.data?.name || 'Unknown Client';
+          } catch (e) {
+            clientsMap[clientId] = 'Unknown Client';
+          }
+        }),
+      );
+
+      // Map bids and replace client id with client name
+      const fetchedBids = bidsData.map((bid: any) => {
+        const vendorQuote = bid.quotes.find(
+          (quote: any) => quote.vendor === currentVendorId,
+        );
+
+        return {
           id: bid._id,
           title: bid.requestDetails,
-          status: bid.status === 'pending' ? 'open' : 'placed',
+          status: vendorQuote ? 'placed' : 'open',
           date: new Date(bid.preferredStartDate).toLocaleDateString('en-GB', {
             day: 'numeric',
             month: 'short',
             year: 'numeric',
           }),
-          client: bid.requester, // Replace with actual client name if available
-          amount: '',
+          client: clientsMap[bid.requester] || 'Unknown Client', // Use fetched name
+          amount: vendorQuote ? vendorQuote.amount.toString() : '',
           category: bid.category,
           minBudget: bid.budgetRange.min,
           maxBudget: bid.budgetRange.max,
-        }));
-
-        setBids(fetchedBids);
-      })
-      .catch(error => {
-        console.error('Error fetching all bids:', error);
-        Alert.alert('Error', 'Failed to load bids. Please try again.');
-      })
-      .finally(() => {
-        setIsLoading(false);
+          quotes: bid.quotes,
+        };
       });
-  }
+
+      setBids(fetchedBids);
+    } catch (error) {
+      console.error('Error fetching all bids:', error);
+      Alert.alert('Error', 'Failed to load bids. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    FetchAllBids();
+    fetchAllBids();
   }, []);
+
+  // Save bid (place new or edit existing)
+  const handleSaveBid = async () => {
+    if (!bidAmount || isNaN(Number(bidAmount))) {
+      Alert.alert('Error', 'Please enter a valid bid amount');
+      return;
+    }
+
+    if (selectedBidIndex === null) {
+      Alert.alert('Error', 'No bid selected');
+      return;
+    }
+
+    setLoadingSaveBid(true);
+
+    try {
+      const bidId = bids[selectedBidIndex].id;
+      const payload = {amount: Number(bidAmount)};
+
+      if (isEditing) {
+        await api.patch(apiEndPoints.EDIT_BID(bidId), payload);
+      } else {
+        await api.post(apiEndPoints.PLACE_BID(bidId), payload);
+      }
+
+      // Update bids state locally after success
+      const updatedBids = [...bids];
+      updatedBids[selectedBidIndex] = {
+        ...updatedBids[selectedBidIndex],
+        status: 'placed',
+        amount: bidAmount,
+      };
+      setBids(updatedBids);
+
+      Alert.alert(
+        'Success',
+        isEditing ? 'Bid updated successfully' : 'Bid placed successfully',
+      );
+      setBidModalVisible(false);
+      setBidAmount('');
+      setSelectedBidIndex(null);
+      setIsEditing(false);
+    } catch (error: any) {
+      console.error('Error saving bid:', error);
+
+      // Check for your specific error message
+      if (
+        error?.response?.data?.message ===
+        'You have already submitted a quote for this bid'
+      ) {
+        Alert.alert(
+          'Bid Exists',
+          'You have already submitted a quote for this bid.',
+        );
+      } else {
+        Alert.alert('Error', 'Failed to save bid. Please try again.');
+      }
+    } finally {
+      setLoadingSaveBid(false);
+    }
+  };
+
+  useEffect(() => {
+    if (
+      isBidModalVisible &&
+      selectedBidIndex !== null &&
+      bids[selectedBidIndex]
+    ) {
+      setBidAmount(bids[selectedBidIndex].amount?.toString() || '');
+    }
+  }, [bids, isBidModalVisible, selectedBidIndex]);
+
   return (
     <>
       <CustomHeader showMenu />
@@ -176,7 +211,7 @@ const BiddingManagementScreen = () => {
         }}
         style={styles.container}
         refreshControl={
-          <RefreshControl refreshing={isLoading} onRefresh={FetchAllBids} />
+          <RefreshControl refreshing={isLoading} onRefresh={fetchAllBids} />
         }>
         {isLoading ? (
           <ActivityIndicator
@@ -188,7 +223,7 @@ const BiddingManagementScreen = () => {
           <Text style={styles.noBidsText}>No Bids Available</Text>
         ) : (
           <View style={styles.bidCardsContainer}>
-            {bids.map((item: any, index) => (
+            {bids.map((item, index) => (
               <View key={item.id} style={styles.bidCard}>
                 <View
                   style={[
@@ -232,9 +267,8 @@ const BiddingManagementScreen = () => {
                         onPress={() => handlePlaceBid(index)}>
                         <Text style={styles.btnText}>Place Bid</Text>
                       </TouchableOpacity>
-                      {/* <TouchableOpacity
-                        style={styles.declineBtn}
-                        onPress={() => handleSkipBid(index)}>
+                      {/* Uncomment if you want skip functionality */}
+                      {/* <TouchableOpacity style={styles.declineBtn} onPress={() => handleSkipBid(index)}>
                         <Text style={styles.btnText}>Skip</Text>
                       </TouchableOpacity> */}
                     </View>
@@ -268,12 +302,18 @@ const BiddingManagementScreen = () => {
             <View style={styles.modalButtons}>
               <TouchableOpacity
                 style={styles.modalSaveBtn}
-                onPress={handleSaveBid}>
-                <Text style={styles.modalSaveText}>Save</Text>
+                onPress={handleSaveBid}
+                disabled={loadingSaveBid}>
+                {loadingSaveBid ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <Text style={styles.modalSaveText}>Save</Text>
+                )}
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.modalCancelBtn}
-                onPress={() => setBidModalVisible(false)}>
+                onPress={() => setBidModalVisible(false)}
+                disabled={loadingSaveBid}>
                 <Text style={styles.modalCancelText}>Cancel</Text>
               </TouchableOpacity>
             </View>

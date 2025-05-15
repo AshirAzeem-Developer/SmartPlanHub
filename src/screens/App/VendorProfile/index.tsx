@@ -228,7 +228,7 @@ const VendorProfileScreen: React.FC<VendorProfileScreenProps> = ({
         data={gallery}
         renderItem={({item}) => (
           <PortfolioCard
-            image={{uri: `http://192.168.18.80:3000${item.url}`}}
+            image={{uri: `http://192.168.0.102:3000${item.url}`}}
             name={item?.filename || ''}
             rating={5}
           />

@@ -4963,7 +4963,7 @@ lodash.throttle@^4.1.1:
   resolved "https://registry.npmjs.org/lodash.throttle/-/lodash.throttle-4.1.1.tgz"
   integrity sha512-wIkUCfVKpVsWo3JSZlc+8MB5it+2AN5W8J7YVMST30UrvcQNZ1Okbj+rbVniijTWE6FGYy4XJq/rHkas8qJMLQ==
 
-lodash@^4.15.0, lodash@^4.17.21:
+lodash@^4.17.21:
   version "4.17.21"
   resolved "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -5878,13 +5878,6 @@ react-native-modal@^14.0.0-rc.1:
   integrity sha512-v5pvGyx1FlmBzdHyPqBsYQyS2mIJhVmuXyNo5EarIzxicKhuoul6XasXMviGcXboEUT0dTYWs88/VendojPiVw==
   dependencies:
     react-native-animatable "1.4.0"
-
-react-native-multi-select@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-multi-select/-/react-native-multi-select-0.1.1.tgz#ead1566562c2cbea48b243a4614fb171574293a0"
-  integrity sha512-YDGYia5NyT3CE8R5HgjW38xlyMKfssMxD9djckUCihs5W9RgAX3w1z+SXxTcUF0dXBAdGNE4pK+Y/75Nx7sDaA==
-  dependencies:
-    lodash "^4.15.0"
 
 react-native-parsed-text@^0.0.22:
   version "0.0.22"
